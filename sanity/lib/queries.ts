@@ -5,7 +5,7 @@ export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 const postFields = /* groq */ `
   _id,
   "status": select(_originalId in path("drafts.**") => "draft", "published"),
-  "title": coalesce(title, "Untitled"),
+   "title": coalesce(title[_key == "de"][0].value, "Untitled"),
   "slug": slug.current,
   excerpt,
   coverImage,

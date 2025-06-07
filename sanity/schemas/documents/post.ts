@@ -21,11 +21,20 @@ export default defineType({
   title: "Post",
   icon: DocumentTextIcon,
   type: "document",
+  orderings: [
+    {
+      title: 'Release Date, New',
+      name: 'releaseDateDesc',
+      by: [
+        {field: 'date', direction: 'desc'}
+      ]
+    }
+  ],
   fields: [
     defineField({
       name: "title",
       title: "Title",
-      type: "string",
+      type: "internationalizedArrayString",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -34,7 +43,7 @@ export default defineType({
       type: "slug",
       description: "A slug is required for the post to show up in the preview",
       options: {
-        source: "title",
+        source: 'title[0].value',
         maxLength: 96,
         isUnique: (value, context) => context.defaultIsUnique(value, context),
       },
@@ -57,9 +66,6 @@ export default defineType({
       type: "image",
       options: {
         hotspot: true,
-        aiAssist: {
-          imageDescriptionField: "alt",
-        },
       },
       fields: [
         {
@@ -94,7 +100,7 @@ export default defineType({
   ],
   preview: {
     select: {
-      title: "title",
+      title: 'title',
       author: "author.name",
       date: "date",
       media: "coverImage",
@@ -104,8 +110,8 @@ export default defineType({
         author && `by ${author}`,
         date && `on ${format(parseISO(date), "LLL d, yyyy")}`,
       ].filter(Boolean);
-
-      return { title, media, subtitle: subtitles.join(" ") };
+      const postTitle = title[0].value;
+      return { title: postTitle, media, subtitle: subtitles.join(" ") };
     },
   },
 });
