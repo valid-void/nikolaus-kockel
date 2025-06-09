@@ -5,11 +5,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
-import Avatar from "../../avatar";
-import CoverImage from "../../cover-image";
-import DateComponent from "../../date";
-import MoreStories from "../../more-stories";
-import PortableText from "../../portable-text";
+import Avatar from "../../../components/avatar";
+import CoverImage from "../../../components/cover-image";
+import DateComponent from "../../../components/date";
+import MoreStories from "../../../components/more-stories";
+import PortableText from "../../../components/portable-text";
 
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch } from "@/sanity/lib/fetch";

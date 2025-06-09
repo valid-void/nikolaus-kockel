@@ -13,6 +13,11 @@
  */
 
 // Source: schema.json
+export type InsertGallery = {
+  _type: "insertGallery";
+  insertGallery?: boolean;
+};
+
 export type Taxonomy = {
   _type: "taxonomy";
   year?: string;
@@ -27,23 +32,18 @@ export type Taxonomy = {
 
 export type EventList = {
   _type: "eventList";
-  colors?: ColoredSection;
   eventCategory?: "present" | "future" | "past";
+  colors?: ColoredSection;
 };
 
-export type ColoredSection = {
-  _type: "coloredSection";
-  bgColor?: {
+export type ProjectList = {
+  _type: "projectList";
+  showAllProjects?: boolean;
+  category?: {
     _ref: string;
     _type: "reference";
     _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "colorTag";
-  };
-  textColor?: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "colorTag";
+    [internalGroqTypeReferenceTo]?: "category";
   };
 };
 
@@ -66,6 +66,67 @@ export type Hero = {
     crop?: SanityImageCrop;
     _type: "image";
   };
+};
+
+export type DocumentContent = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
+  listItem?: "bullet" | "number";
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+} | {
+  _key: string;
+} & Hero | {
+  _key: string;
+} & ProjectList | {
+  _key: string;
+} & EventList | {
+  _key: string;
+} & InsertGallery>;
+
+export type SimpleBlock = Array<{
+  children?: Array<{
+    marks?: Array<string>;
+    text?: string;
+    _type: "span";
+    _key: string;
+  }>;
+  style?: "normal";
+  listItem?: never;
+  markDefs?: Array<{
+    href?: string;
+    _type: "link";
+    _key: string;
+  }>;
+  level?: number;
+  _type: "block";
+  _key: string;
+}>;
+
+export type Navigation = {
+  _type: "navigation";
+  menu?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "post";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "project";
+  }>;
 };
 
 export type Category = {
@@ -161,6 +222,58 @@ export type Author = {
   };
 };
 
+export type WebsiteInfo = {
+  _id: string;
+  _type: "websiteInfo";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  colors?: ColoredSection;
+  menu?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "page";
+  }>;
+  bgColor?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "project";
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "event";
+  };
+  meta?: Array<{
+    _key: string;
+  } & InternationalizedArraySimpleBlockValue>;
+  ogImage?: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: Array<{
+      _key: string;
+    } & InternationalizedArrayStringValue>;
+    metadataBase?: string;
+    _type: "image";
+  };
+};
+
 export type Event = {
   _id: string;
   _type: "event";
@@ -214,6 +327,7 @@ export type Event = {
   main?: Array<{
     _key: string;
   } & InternationalizedArrayDocumentContentValue>;
+  colors?: ColoredSection;
 };
 
 export type EventDates = {
@@ -275,53 +389,21 @@ export type Project = {
   main?: Array<{
     _key: string;
   } & InternationalizedArrayDocumentContentValue>;
+  colors?: ColoredSection;
   date?: string;
 };
 
-export type Settings = {
+export type Page = {
   _id: string;
-  _type: "settings";
+  _type: "page";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
+  title?: Array<{
     _key: string;
-  }>;
-  footer?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  ogImage?: {
+  } & InternationalizedArrayStringValue>;
+  slug?: Slug;
+  previewImage?: {
     asset?: {
       _ref: string;
       _type: "reference";
@@ -331,34 +413,61 @@ export type Settings = {
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
-    alt?: string;
-    metadataBase?: string;
     _type: "image";
+  };
+  gallery?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  category?: Array<{
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "category";
+  }>;
+  authors?: Array<string>;
+  keywords?: Array<{
+    _key: string;
+  } & InternationalizedArrayStringValue>;
+  description?: Array<{
+    _key: string;
+  } & InternationalizedArrayTextValue>;
+  main?: Array<{
+    _key: string;
+  } & InternationalizedArrayDocumentContentValue>;
+  colors?: ColoredSection;
+};
+
+export type ColoredSection = {
+  _type: "coloredSection";
+  bgColor?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "colorTag";
+  };
+  textColor?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "colorTag";
   };
 };
 
-export type DocumentContent = Array<{
-  children?: Array<{
-    marks?: Array<string>;
-    text?: string;
-    _type: "span";
-    _key: string;
-  }>;
-  style?: "normal" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "blockquote";
-  listItem?: "bullet" | "number";
-  markDefs?: Array<{
-    href?: string;
-    _type: "link";
-    _key: string;
-  }>;
-  level?: number;
-  _type: "block";
-  _key: string;
-} | {
-  _key: string;
-} & Hero | {
-  _key: string;
-} & EventList>;
+export type InternationalizedArraySimpleBlockValue = {
+  _type: "internationalizedArraySimpleBlockValue";
+  value?: SimpleBlock;
+};
 
 export type InternationalizedArrayDocumentContentValue = {
   _type: "internationalizedArrayDocumentContentValue";
@@ -374,6 +483,10 @@ export type InternationalizedArrayStringValue = {
   _type: "internationalizedArrayStringValue";
   value?: string;
 };
+
+export type InternationalizedArraySimpleBlock = Array<{
+  _key: string;
+} & InternationalizedArraySimpleBlockValue>;
 
 export type InternationalizedArrayDocumentContent = Array<{
   _key: string;
@@ -538,9 +651,9 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Taxonomy | EventList | ColoredSection | Hero | Category | ColorTag | Post | Author | Event | EventDates | Project | Settings | DocumentContent | InternationalizedArrayDocumentContentValue | InternationalizedArrayTextValue | InternationalizedArrayStringValue | InternationalizedArrayDocumentContent | InternationalizedArrayText | InternationalizedArrayString | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = InsertGallery | Taxonomy | EventList | ProjectList | Hero | DocumentContent | SimpleBlock | Navigation | Category | ColorTag | Post | Author | WebsiteInfo | Event | EventDates | Project | Page | ColoredSection | InternationalizedArraySimpleBlockValue | InternationalizedArrayDocumentContentValue | InternationalizedArrayTextValue | InternationalizedArrayStringValue | InternationalizedArraySimpleBlock | InternationalizedArrayDocumentContent | InternationalizedArrayText | InternationalizedArrayString | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./app/(blog)/posts/[slug]/page.tsx
+// Source: ./app/(user)/[locale]/posts/[slug]/page.tsx
 // Variable: postSlugs
 // Query: *[_type == "post" && defined(slug.current)]{"slug": slug.current}
 export type PostSlugsResult = Array<{
@@ -550,64 +663,7 @@ export type PostSlugsResult = Array<{
 // Source: ./sanity/lib/queries.ts
 // Variable: settingsQuery
 // Query: *[_type == "settings"][0]
-export type SettingsQueryResult = {
-  _id: string;
-  _type: "settings";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "normal";
-    listItem?: never;
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  footer?: Array<{
-    children?: Array<{
-      marks?: Array<string>;
-      text?: string;
-      _type: "span";
-      _key: string;
-    }>;
-    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
-    listItem?: "bullet" | "number";
-    markDefs?: Array<{
-      href?: string;
-      _type: "link";
-      _key: string;
-    }>;
-    level?: number;
-    _type: "block";
-    _key: string;
-  }>;
-  ogImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    alt?: string;
-    metadataBase?: string;
-    _type: "image";
-  };
-} | null;
+export type SettingsQueryResult = null;
 // Variable: heroQuery
 // Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {    content,      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),   "title": coalesce(title[_key == "de"][0].value, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{"name": coalesce(name, "Anonymous"), picture},  }
 export type HeroQueryResult = {

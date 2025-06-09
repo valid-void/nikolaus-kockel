@@ -1,4 +1,4 @@
-import "../globals.css";
+import "../../globals.css";
 
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
@@ -10,8 +10,8 @@ import {
 import { Inter } from "next/font/google";
 import { draftMode } from "next/headers";
 
-import AlertBanner from "./alert-banner";
-import PortableText from "./portable-text";
+import AlertBanner from "../components/alert-banner";
+import PortableText from "../components/portable-text";
 
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -57,15 +57,18 @@ const inter = Inter({
 
 export default async function RootLayout({
   children,
+  params,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode,
+  params: { locale: string }
 }) {
+  const { locale } = await params;
   const data = await sanityFetch({ query: settingsQuery });
   const footer = data?.footer || [];
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang="en" className={`${inter.variable} bg-white text-black`}>
+    <html lang={locale} className={`${inter.variable} bg-white text-black`}>
       <body>
         <section className="min-h-screen">
           {isDraftMode && <AlertBanner />}
