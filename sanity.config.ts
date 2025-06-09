@@ -4,7 +4,8 @@
  */
 import { visionTool } from "@sanity/vision";
 import { PluginOptions, defineConfig } from "sanity";
-import {internationalizedArray} from 'sanity-plugin-internationalized-array';
+import { internationalizedArray } from 'sanity-plugin-internationalized-array';
+import { colorInput } from '@sanity/color-input'
 import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
 import {
   presentationTool,
@@ -12,19 +13,36 @@ import {
   defineLocations,
   type DocumentLocation,
 } from "sanity/presentation";
-import { structureTool } from "sanity/structure";
+import { StructureBuilder, structureTool } from "sanity/structure";
 
 import { apiVersion, dataset, projectId, studioUrl } from "@/sanity/lib/api";
 import { pageStructure, singletonPlugin } from "@/sanity/plugins/settings";
 import { assistWithPresets } from "@/sanity/plugins/assist";
 import author from "@/sanity/schemas/documents/author";
 import post from "@/sanity/schemas/documents/post";
-import settings from "@/sanity/schemas/singletons/settings";
+import project from "@/sanity/schemas/documents/project";
 import { resolveHref } from "@/sanity/lib/utils";
 
+// import modules from "./sanity/schemas/modules";
+import hero from "./sanity/schemas/components/hero";
+import coloredSection from "./sanity/schemas/components/coloredSection";
+import eventList from "./sanity/schemas/components/eventList";
+import colorTag from "./sanity/schemas/documents/colorTag";
+import { documentContent, insertGallery, simpleBlock } from "./sanity/schemas/components/localisedFields";
+import taxonomy from "./sanity/schemas/components/taxonomy";
+import category from "./sanity/schemas/documents/category";
+import eventDates from "./sanity/schemas/components/eventDates";
+import event from "./sanity/schemas/documents/event";
+import { AddUserIcon, CalendarIcon, CogIcon, DocumentIcon, DropIcon, MenuIcon, TagIcon } from "@sanity/icons";
+import { ComponentType } from "react";
+import websiteInfo from "./sanity/schemas/singletons/websiteInfo";
+import navigation from "./sanity/schemas/components/navigation";
+import projectList from "./sanity/schemas/components/projectList";
+import page from "./sanity/schemas/documents/page";
+
 export const languages = [
-  {id: 'de', title: 'Deutsch'},
-  {id: 'en', title: 'English'}
+  { id: 'de', title: 'Deutsch' },
+  { id: 'en', title: 'English' }
 ];
 
 export const defaultLanguage = "de";
@@ -41,17 +59,42 @@ export default defineConfig({
   schema: {
     types: [
       // Singletons
-      settings,
+      websiteInfo,
       // Documents
+      page,
+      project,
+      event,
       post,
       author,
+      colorTag,
+      category,
+      // Modules
+      navigation,
+      simpleBlock,
+      documentContent,
+      hero,
+      coloredSection,
+      projectList,
+      eventList,
+      eventDates,
+      taxonomy,
+      insertGallery,
     ],
   },
+  document: {
+    actions: (prev, context) => {
+      if (context.schemaType === 'websiteInfo') {
+        return prev.filter((action) => action.action !== 'delete')
+      }
+      return prev
+    }
+  },
   plugins: [
+    colorInput(),
     internationalizedArray({
       languages: languages,
       defaultLanguages: ['de'],
-      fieldTypes: ['string']
+      fieldTypes: ['string', 'text', 'documentContent', 'simpleBlock']
     }),
     presentationTool({
       resolve: {
@@ -62,7 +105,7 @@ export default defineConfig({
           },
         ]),
         locations: {
-          settings: defineLocations({
+          websiteInfo: defineLocations({
             locations: [homeLocation],
             message: "This document is used on all pages",
             tone: "caution",
@@ -86,21 +129,30 @@ export default defineConfig({
       },
       previewUrl: { previewMode: { enable: "/api/draft-mode/enable" } },
     }),
-    structureTool({ 
-      // structure: (S, context) => {
-      //   return S.list()
-      //     .title('Content')
-      //     .items([
-      //       orderableDocumentListDeskItem({type: 'post', S, context}),
-      //       // ...other items
-      //     ])
-      // },
+    structureTool({
+      // structure:  pageStructure([settings]) 
+      structure: (S) => S.list()
+        .title('Content')
+        .items([
+          Projects(S),
+          Events(S),
+          // Posts(S),
+          Pages(S),
+          S.divider(),
+          Taxonomy(S),
+          Settings(S),
+        ])
 
-      structure:  pageStructure([settings]) 
-    
     }),
     // Configures the global "new document" button, and document actions, to suit the Settings document singleton
-    singletonPlugin([settings.name]),
+    singletonPlugin([
+      websiteInfo.name,
+      colorTag.name,
+      category.name,
+      taxonomy.name,
+      author.name,
+      post.name,
+    ]),
     // Add an image asset source for Unsplash
     // unsplashImageAsset(),
     // Sets up AI Assist with preset prompts
@@ -109,8 +161,73 @@ export default defineConfig({
     // Vision lets you query your content with GROQ in the studio
     // https://www.sanity.io/docs/the-vision-plugin
     process.env.NODE_ENV === "development" &&
-      visionTool({ defaultApiVersion: apiVersion }),
+    visionTool({ defaultApiVersion: apiVersion }),
   ].filter(Boolean) as PluginOptions[],
 });
 
+const Settings = (S: StructureBuilder) =>
+  S.listItem()
+    .title('General')
+    .icon(CogIcon as ComponentType)
+    .child(S.document().schemaType('websiteInfo').documentId('websiteInfo'))
+          
+const Pages = (S: StructureBuilder) =>
+  S.listItem()
+    .title('Pages')
+    .icon(DocumentIcon as ComponentType)
+    .child(
+      S.documentTypeList('page')
+    )
 
+const Events = (S: StructureBuilder) =>
+  S.listItem()
+    .title('Events')
+    .icon(CalendarIcon as ComponentType)
+    .child(
+      S.documentTypeList('event')
+    )
+
+const Projects = (S: StructureBuilder) =>
+  S.listItem()
+    .title('Projects')
+    .icon(DocumentIcon as ComponentType)
+    .child(
+      S.documentTypeList('project')
+    )
+
+const Posts = (S: StructureBuilder) =>
+  S.listItem()
+    .title('Posts')
+    .icon(DocumentIcon as ComponentType)
+    .child(
+      S.documentTypeList('post')
+    )
+
+const Taxonomy = (S: StructureBuilder) =>
+  S.listItem()
+    .title('Taxonomy')
+    .icon(CalendarIcon as ComponentType)
+    .child(
+      S.list()
+        .title('Taxonomy')
+        .items([
+          S.listItem()
+    .title('Category')
+    .icon(TagIcon as ComponentType)
+    .child(
+      S.documentTypeList('category')
+    ),
+  S.listItem()
+    .title('Author')
+    .icon(AddUserIcon as ComponentType)
+    .child(
+      S.documentTypeList('author')
+    ),
+  S.listItem()
+    .title('Color')
+    .icon(DropIcon as ComponentType)
+    .child(
+      S.documentTypeList('colorTag')
+    )
+        ])
+    )
