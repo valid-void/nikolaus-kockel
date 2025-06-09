@@ -67,6 +67,9 @@ export default async function RootLayout({
   const bgColor = data.colors.bgColor.color.hex;
   const textColor = data.colors.textColor.color.hex;
 
+  const menu = data.menu;
+  console.log("homepage data", data)
+
   const footer = data?.footer || [];
   const { isEnabled: isDraftMode } = await draftMode();
 
