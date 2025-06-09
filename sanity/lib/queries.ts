@@ -1,6 +1,9 @@
 import { defineQuery } from "next-sanity";
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
+export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
+  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},
+}`);
 
 const postFields = /* groq */ `
   _id,

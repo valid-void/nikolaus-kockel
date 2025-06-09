@@ -15,12 +15,12 @@ import PortableText from "../components/portable-text";
 
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch } from "@/sanity/lib/fetch";
-import { settingsQuery } from "@/sanity/lib/queries";
+import { websiteInfoQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch({
-    query: settingsQuery,
+    query: websiteInfoQuery,
     // Metadata should never contain stega
     stega: false,
   });
@@ -63,12 +63,21 @@ export default async function RootLayout({
   params: { locale: string }
 }) {
   const { locale } = await params;
-  const data = await sanityFetch({ query: settingsQuery });
+  const data = await sanityFetch({ query: websiteInfoQuery });
+  const bgColor = data.colors.bgColor.color.hex;
+  const textColor = data.colors.textColor.color.hex;
+
   const footer = data?.footer || [];
   const { isEnabled: isDraftMode } = await draftMode();
 
   return (
-    <html lang={locale} className={`${inter.variable} bg-white text-black`}>
+    <html 
+    lang={locale} 
+    style={{ 
+      "--primary-color": bgColor,
+      "--primary-text": textColor
+    }as React.CSSProperties} 
+    className={`${inter.variable} font-primary bg-primary text-primaryTextColor`}>
       <body>
         <section className="min-h-screen">
           {isDraftMode && <AlertBanner />}

@@ -5,6 +5,10 @@ export default {
   content: ["./app/**/*.{ts,tsx}", "./sanity/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      colors: {
+        'primary': "var(--primary-color)",
+        'primaryTextColor': "var(--primary-text)",
+      },
       fontFamily: {
         sans: ["var(--font-inter)"],
       },
