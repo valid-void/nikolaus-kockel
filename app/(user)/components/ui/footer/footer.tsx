@@ -1,18 +1,19 @@
 "use client"
 
-export default function Footer() {
-  const footerButton = [
-    { title: "instagram", link: "https://www.instagram.com/lobloblobster1/" },
-    { title: "newsletter", link: `/newsletter` },
-    { title: "mail", link: "mailto:nikolaus.kockel@gmx.de" }
-  ]
+interface FooterProps {
+    links:  Array<{
+      title: string;
+      link: string;
+    }>;
+}
 
+export default function Footer(props: FooterProps) {
   return (
     <footer >
       <div className="bg-primaryTextColor m-10 mb-0  rounded-3xl">
 
         <div className="w-full   p-10 gap-10 text-center grid lg:grid-cols-3 text-primaryTextColor">
-          {footerButton.map((button, index) => (
+          {props?.links?.map((button, index) => (
             <FooterLink href={button.link} title={button.title} key={index}/>
           ))}
         </div>

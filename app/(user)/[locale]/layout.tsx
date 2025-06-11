@@ -69,6 +69,8 @@ export default async function RootLayout({
   const data = await sanityFetch({ query: websiteInfoQuery });
   const bgColor = data?.colors?.bgColor?.color?.hex ?? '#fff';
   const textColor = data?.colors?.textColor?.color?.hex ?? '#000';
+
+  const title = data?.title ?? "Title undefined";
   const headerProps = {
     menuItems: data?.menu ?? null,
     langItems: [
@@ -76,6 +78,20 @@ export default async function RootLayout({
       { slug: 'en', title: 'EN' }
     ],
   }
+  const footerProps: Array<{
+      title: string;
+      link: string;
+    }> = [];
+  data.footer?.forEach((element: any) => {
+    console.log("element", element)
+    footerProps.push({
+      title: element?.title ?? "undefined",
+      link: element?.link ?? ""
+    })
+  });
+
+
+  
 
   console.log("homepage data", data)
 
@@ -93,9 +109,9 @@ export default async function RootLayout({
       <body>
         <section className="min-h-screen">
           {isDraftMode && <AlertBanner />}
-          <Header menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>
+          <Header title={title} menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>
           <main>{children}</main>
-          <Footer/>
+          <Footer links={footerProps} />
         </section>
         {isDraftMode && <VisualEditing />}
         <SpeedInsights />

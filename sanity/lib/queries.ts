@@ -3,7 +3,20 @@ import { defineQuery } from "next-sanity";
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
 export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   ...,
-  menu[]->{'title': title[_key == "en"][0].value, 'slug': slug.current },
+  footer[]{
+    _type == "link" => {
+      "title": title,
+      "link": url
+    },
+    _type == "page" => {
+      "title": @->title[_key == "en"][0].value,
+      "link": @->slug.current
+    }
+  },
+  menu[]->{
+    'title': title[_key == "en"][0].value, 
+    'slug': slug.current 
+  },
   'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},
 }`);
 

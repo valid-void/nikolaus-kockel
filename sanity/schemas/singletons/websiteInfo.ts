@@ -71,6 +71,46 @@ export default defineType({
             ]
         }),
         defineField({
+            name: 'footer',
+            title: 'Footer Links',
+            type: 'array',
+            group: 'menu',
+            of: [
+                defineField({
+                    name: 'link',
+                    title: 'Link',
+                    type: 'object',
+                    fields: [
+                        {
+                            title: "Title",
+                            name: "title",
+                            type: "string",
+                        },
+                        {
+                            title: "URL",
+                            name: "url",
+                            type: "string",
+                        }
+                    ]
+                }),
+                {
+                    title: "Select a Page",
+                    name: "page",
+                    type: "reference",
+                    weak: true,
+                    to: [
+                        { type: "page" }
+                    ],
+                    options: {
+                        disableNew: true
+                    }
+                }
+            ]
+        }),
+
+
+
+        defineField({
             title: "Background Color",
             name: "bgColor",
             type: "reference",

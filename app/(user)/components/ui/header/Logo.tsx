@@ -26,7 +26,11 @@ function useScrollDirection() {
   return scrollDirection;
 };
 
-export default function Logo () {
+interface LogoProps {
+    title: string;
+}
+
+export default function Logo (props: LogoProps) {
         const scrollDirection = useScrollDirection();
 
     return (
@@ -35,7 +39,7 @@ export default function Logo () {
             + (scrollDirection === "down" ? "w-0 pr-0 pl-[110px] text-transparent" : " md:w-auto pr-[110px]")
             }>
               <Link href="/" className="m-auto">
-                Nikolaus Kockel
+                {props.title}
               </Link>
         </div>
     )
