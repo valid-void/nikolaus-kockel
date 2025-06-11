@@ -17,6 +17,8 @@ import * as demo from "@/sanity/lib/demo";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { websiteInfoQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
+import Header from "../components/ui/header/header";
+import { primaryFont, secondaryFont } from '../fonts/fonts'
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await sanityFetch({
@@ -64,10 +66,16 @@ export default async function RootLayout({
 }) {
   const { locale } = await params;
   const data = await sanityFetch({ query: websiteInfoQuery });
-  const bgColor = data.colors.bgColor.color.hex;
-  const textColor = data.colors.textColor.color.hex;
+  const bgColor = data?.colors?.bgColor?.color?.hex ?? '#fff';
+  const textColor = data?.colors?.textColor?.color?.hex ?? '#000';
+  const headerProps = {
+    menuItems: data?.menu ?? null,
+    langItems: [
+      { slug: 'de', title: 'DE' },
+      { slug: 'en', title: 'EN' }
+    ],
+  }
 
-  const menu = data.menu;
   console.log("homepage data", data)
 
   const footer = data?.footer || [];
@@ -80,10 +88,12 @@ export default async function RootLayout({
       "--primary-color": bgColor,
       "--primary-text": textColor
     }as React.CSSProperties} 
-    className={`${inter.variable} font-primary bg-primary text-primaryTextColor`}>
+    className={`${inter.variable} ${primaryFont.variable} ${secondaryFont.variable} font-primary bg-primary text-primaryTextColor`}
+    >
       <body>
         <section className="min-h-screen">
           {isDraftMode && <AlertBanner />}
+          <Header menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>
           <main>{children}</main>
           <footer className="bg-accent-1 border-accent-2 border-t">
             <div className="container mx-auto px-5">

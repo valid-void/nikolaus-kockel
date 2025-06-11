@@ -13,6 +13,8 @@
     "typegen": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.4",
+    "@heroicons/react": "^2.2.0",
     "@sanity/assist": "^3.0.8",
     "@sanity/color-input": "^4.0.3",
     "@sanity/icons": "^3.4.0",
