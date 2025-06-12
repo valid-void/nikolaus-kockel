@@ -237,6 +237,18 @@ export type WebsiteInfo = {
     _key: string;
     [internalGroqTypeReferenceTo]?: "page";
   }>;
+  footer?: Array<{
+    title?: string;
+    url?: string;
+    _type: "link";
+    _key: string;
+  } | {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    _key: string;
+    [internalGroqTypeReferenceTo]?: "page";
+  }>;
   bgColor?: {
     _ref: string;
     _type: "reference";
@@ -665,7 +677,7 @@ export type PostSlugsResult = Array<{
 // Query: *[_type == "settings"][0]
 export type SettingsQueryResult = null;
 // Variable: websiteInfoQuery
-// Query: *[_type == "websiteInfo"][0] {  ...,  menu[]->{'title': title[_key == "en"][0].value, 'slug': slug.current },  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},}
+// Query: *[_type == "websiteInfo"][0] {  ...,  footer[]{    _type == "link" => {      "title": title,      "link": url    },    _type == "page" => {      "title": @->title[_key == "en"][0].value,      "link": @->slug.current    }  },  menu[]->{    'title': title[_key == "en"][0].value,     'slug': slug.current   },  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},}
 export type WebsiteInfoQueryResult = {
   _id: string;
   _type: "websiteInfo";
@@ -684,6 +696,10 @@ export type WebsiteInfoQueryResult = {
   menu: Array<{
     title: string | null;
     slug: string | null;
+  }> | null;
+  footer: Array<{} | {
+    title: string | null;
+    link: string | null;
   }> | null;
   bgColor?: {
     _ref: string;
@@ -881,7 +897,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"post\" && defined(slug.current)]{\"slug\": slug.current}": PostSlugsResult;
     "*[_type == \"settings\"][0]": SettingsQueryResult;
-    "*[_type == \"websiteInfo\"][0] {\n  ...,\n  menu[]->{'title': title[_key == \"en\"][0].value, 'slug': slug.current },\n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
+    "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == \"en\"][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == \"en\"][0].value, \n    'slug': slug.current \n  },\n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": HeroQueryResult;
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": MoreStoriesQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": PostQueryResult;

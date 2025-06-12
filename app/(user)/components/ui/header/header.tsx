@@ -24,5 +24,3 @@ export default function Header (props: HeaderProps) {
         </header>
     )
 }
-
-// export default Header

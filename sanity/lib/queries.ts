@@ -9,16 +9,28 @@ export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
       "link": url
     },
     _type == "page" => {
-      "title": @->title[_key == "en"][0].value,
+      "title": @->title[_key == $locale][0].value,
       "link": @->slug.current
     }
   },
   menu[]->{
-    'title': title[_key == "en"][0].value, 
+    'title': title[_key == $locale][0].value, 
     'slug': slug.current 
   },
   'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},
 }`);
+
+
+export const contentSlugs = defineQuery(
+  `*[_type in ["page", "project", "event"] && defined(slug.current)]{"slug": slug.current}`,
+);
+export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"] && slug.current == $slug] [0] {
+    _id,
+    'title': title[_key == $locale][0].value, 
+    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},
+    'main': main[_key == $locale][0].value
+  }
+`)
 
 const postFields = /* groq */ `
   _id,
