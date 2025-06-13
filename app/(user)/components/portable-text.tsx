@@ -12,7 +12,7 @@ export default function CustomPortableText({
   params,
 }: {
   value: PortableTextBlock[]
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }> | { slug: string }
 }) {
   // Split content: separate standard blocks and custom types
   return (

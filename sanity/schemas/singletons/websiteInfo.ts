@@ -14,7 +14,7 @@ export default defineType({
             default: true
         },
         {
-            title: 'Menu',
+            title: 'Navigation',
             name: 'menu',
         },
         {
@@ -49,6 +49,19 @@ export default defineType({
             type: "coloredSection",
             group: 'colors',
             validation: (rule) => rule.required(),
+        }),
+        defineField({
+            title: "Homepage",
+            name: "homepage",
+            type: "reference",
+            group: 'menu',
+            weak: true,
+            to: [
+                { type: "page" }
+            ],
+            options: {
+                disableNew: true
+            }
         }),
         defineField({
             name: 'menu',

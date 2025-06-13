@@ -135,7 +135,9 @@ export type Category = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
+  title?: Array<{
+    _key: string;
+  } & InternationalizedArrayStringValue>;
   slug?: Slug;
 };
 
@@ -230,6 +232,12 @@ export type WebsiteInfo = {
   _rev: string;
   title?: string;
   colors?: ColoredSection;
+  homepage?: {
+    _ref: string;
+    _type: "reference";
+    _weak?: boolean;
+    [internalGroqTypeReferenceTo]?: "page";
+  };
   menu?: Array<{
     _ref: string;
     _type: "reference";
@@ -677,7 +685,7 @@ export type PostSlugsResult = Array<{
 // Query: *[_type == "settings"][0]
 export type SettingsQueryResult = null;
 // Variable: websiteInfoQuery
-// Query: *[_type == "websiteInfo"][0] {  ...,  footer[]{    _type == "link" => {      "title": title,      "link": url    },    _type == "page" => {      "title": @->title[_key == $locale][0].value,      "link": @->slug.current    }  },  menu[]->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},}
+// Query: *[_type == "websiteInfo"][0] {  ...,  footer[]{    _type == "link" => {      "title": title,      "link": url    },    _type == "page" => {      "title": @->title[_key == $locale][0].value,      "link": @->slug.current    }  },  menu[]->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  homepage->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},}
 export type WebsiteInfoQueryResult = {
   _id: string;
   _type: "websiteInfo";
@@ -692,6 +700,10 @@ export type WebsiteInfoQueryResult = {
     textColor: {
       color: Color | null;
     } | null;
+  } | null;
+  homepage: {
+    title: string | null;
+    slug: string | null;
   } | null;
   menu: Array<{
     title: string | null;
@@ -737,13 +749,19 @@ export type WebsiteInfoQueryResult = {
     _type: "image";
   };
 } | null;
+// Variable: homepageQuery
+// Query: *[_type == "websiteInfo"][0] {  'slug': homepage->slug.current,  'title': homepage->title[_key == $locale][0].value,}
+export type HomepageQueryResult = {
+  slug: string | null;
+  title: string | null;
+} | null;
 // Variable: contentSlugs
 // Query: *[_type in ["page", "project", "event"] && defined(slug.current)]{"slug": slug.current}
 export type ContentSlugsResult = Array<{
   slug: string | null;
 }>;
 // Variable: contentQuery
-// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    'title': title[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value  }
+// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    'title': title[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}    }  }
 export type ContentQueryResult = {
   _id: string;
   title: string | null;
@@ -755,7 +773,197 @@ export type ContentQueryResult = {
       color: Color | null;
     } | null;
   } | null;
-  main: DocumentContent | null;
+  main: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+    colors: null;
+  } | {
+    _key: string;
+    _type: "eventList";
+    eventCategory?: "future" | "past" | "present";
+    colors: {
+      bgColor: {
+        color: Color | null;
+      } | null;
+      textColor: {
+        color: Color | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "hero";
+    title?: string;
+    showTitle?: boolean;
+    alt?: string;
+    showAlt?: boolean;
+    heroHeight?: "100vh" | "50vh";
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    colors: null;
+  } | {
+    _key: string;
+    _type: "insertGallery";
+    insertGallery?: boolean;
+    colors: null;
+  } | {
+    _key: string;
+    _type: "projectList";
+    showAllProjects?: boolean;
+    category?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "category";
+    };
+    colors: null;
+  }> | null;
+} | null;
+// Variable: projectListQuery
+// Query: *[_type == "project"] | order(date desc) {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,}
+export type ProjectListQueryResult = Array<{
+  title: string | null;
+  description: string | null;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  keywords: string | null;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  slug: string | null;
+  year: string | null;
+}>;
+// Variable: eventOnGoing
+// Query: *[_type=='event' && date.start < now() && date.end > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
+export type EventOnGoingResult = Array<{
+  title: string | null;
+  description: string | null;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  keywords: string | null;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  slug: string | null;
+  year: null;
+  start: string | null;
+  end: string | null;
+}>;
+// Variable: eventInFuture
+// Query: *[_type=='event' && date.start > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
+export type EventInFutureResult = Array<{
+  title: string | null;
+  description: string | null;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  keywords: string | null;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  slug: string | null;
+  year: null;
+  start: string | null;
+  end: string | null;
+}>;
+// Variable: eventInPast
+// Query: *[_type=='event' && date.end < now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
+export type EventInPastResult = Array<{
+  title: string | null;
+  description: string | null;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  keywords: string | null;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  slug: string | null;
+  year: null;
+  start: string | null;
+  end: string | null;
+}>;
+// Variable: galleryQuery
+// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {  gallery}
+export type GalleryQueryResult = {
+  gallery: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }> | null;
 } | null;
 // Variable: heroQuery
 // Query: *[_type == "post" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {    content,      _id,  "status": select(_originalId in path("drafts.**") => "draft", "published"),   "title": coalesce(title[_key == "de"][0].value, "Untitled"),  "slug": slug.current,  excerpt,  coverImage,  "date": coalesce(date, _updatedAt),  "author": author->{"name": coalesce(name, "Anonymous"), picture},  }
@@ -917,9 +1125,15 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"post\" && defined(slug.current)]{\"slug\": slug.current}": PostSlugsResult;
     "*[_type == \"settings\"][0]": SettingsQueryResult;
-    "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
+    "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
+    "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n}": HomepageQueryResult;
     "*[_type in [\"page\", \"project\", \"event\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
-    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    'title': title[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value\n  }\n": ContentQueryResult;
+    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    'title': title[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}\n    }\n  }\n": ContentQueryResult;
+    "*[_type == \"project\"] | order(date desc) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
+    "*[_type=='event' && date.start < now() && date.end > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventOnGoingResult;
+    "*[_type=='event' && date.start > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInFutureResult;
+    "*[_type=='event' && date.end < now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInPastResult;
+    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n  gallery\n}": GalleryQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": HeroQueryResult;
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": MoreStoriesQueryResult;
     "\n  *[_type == \"post\" && slug.current == $slug] [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": PostQueryResult;

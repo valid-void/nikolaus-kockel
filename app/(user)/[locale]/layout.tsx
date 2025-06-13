@@ -117,7 +117,7 @@ export default async function RootLayout({
       <body >
         <section className="min-h-screen">
           {isDraftMode && <AlertBanner />}
-          <Header title={title} menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>
+          <Header locale={locale} title={title} menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>
           <main>{children}</main>
           <Footer links={footerProps} />
         </section>

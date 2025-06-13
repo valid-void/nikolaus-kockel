@@ -19,8 +19,17 @@ export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
     'title': title[_key == $locale][0].value, 
     'slug': slug.current 
   },
+  homepage->{
+    'title': title[_key == $locale][0].value, 
+    'slug': slug.current 
+  },
   ${colors},
 }`);
+
+export const homepageQuery = defineQuery(`*[_type == "websiteInfo"][0] {
+  'slug': homepage->slug.current,
+  'title': homepage->title[_key == $locale][0].value,
+}`)
 
 
 export const contentSlugs = defineQuery(

@@ -7,6 +7,7 @@ import { useRouter, usePathname } from 'next/navigation'
 
 interface BurgerMenuProps {
     type: "burgerMenu" | "languageMenu";
+    homepageSlug: string;
     title: string;
     items: Array<{
         title: string | null;
@@ -44,8 +45,11 @@ export default function BurgerMenu(props: BurgerMenuProps) {
                                     if (!el?.slug) return null
 
                                     const pathSegments = pathname.split('/')
+                                    const isCurrentLocale = pathSegments[1] === el.slug;
+                                    const isCurrentPage = pathSegments[2] === el?.slug;
+                                    const isHomepage = pathSegments[2] === undefined && el?.slug === props.homepageSlug;
 
-
+                                    console.log("pathSegments[2]", pathSegments[2])
                                     const handleClick = () => {
                                         if (props.icon === "LanguageIcon") {
                                         const segments = pathname.split('/')
@@ -59,13 +63,13 @@ export default function BurgerMenu(props: BurgerMenuProps) {
                                             { props.type === "languageMenu" ? (
                                                 <button
                                                 onClick={handleClick}
-                                                className={`${el.slug == pathSegments[1] ? "underline" : ""} block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor`}
+                                                className={`${ isCurrentLocale ? "underline" : "" } block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor`}
                                                 >
                                                 {el.title}
                                                 </button>
                                             ) : (
-                                                <Link href={el.slug}>
-                                                    <div className={`${el.slug == pathSegments[2] ? "underline" : ""} block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor`}>
+                                                <Link href={isHomepage ? "/" : el.slug}>
+                                                    <div className={`${ isCurrentPage || isHomepage ? "underline" : "" } block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor`}>
                                                         {el.title}
                                                     </div>
                                                 </Link>

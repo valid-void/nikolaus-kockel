@@ -16,6 +16,7 @@ import { sanityFetch } from "@/sanity/lib/fetch";
 import { contentQuery, postQuery, contentSlugs, settingsQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import PageTitle from "../../components/ui/header/pageTitle";
+import DocumentContent from "../../components/ui/documentContent";
 
 
 type Props = {
@@ -53,29 +54,29 @@ export async function generateMetadata(
 }
 
 export default async function PostPage({ params }: Props) {
-  const [content] = await Promise.all([
-    sanityFetch({ query: contentQuery, params })
-  ]);
+  // const [content] = await Promise.all([
+  //   sanityFetch({ query: contentQuery, params })
+  // ]);
 
-  const bgColor = content?.colors?.bgColor?.color?.hex ?? 'var(--primary-color)';
-  const textColor = content?.colors?.textColor?.color?.hex ?? 'var(--primary-text)';
+  // const bgColor = content?.colors?.bgColor?.color?.hex ?? 'var(--primary-color)';
+  // const textColor = content?.colors?.textColor?.color?.hex ?? 'var(--primary-text)';
 
-  if (!content?._id) {
-    return notFound();
-  }
+  // if (!content?._id) {
+  //   return notFound();
+  // }
 
   return (
     <div>
-      <PageTitle title={content.title}/>
-    <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pb-[300px]">
- 
-        {content.main?.length && (
-           <PortableText
-             value={content.main as PortableTextBlock[]}
-             params={params}
-           />
-         )}
-    </div>
+      <DocumentContent params={params} />
+      {/* <PageTitle title={content.title}/>
+        <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pb-[300px]">
+          {content.main?.length && (
+            <PortableText
+              value={content.main as PortableTextBlock[]}
+              params={params}
+            />
+          )}
+      </div> */}
     </div>
   );
 }
