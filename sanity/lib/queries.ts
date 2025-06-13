@@ -31,6 +31,19 @@ export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"]
     'main': main[_key == $locale][0].value
   }
 `)
+export const projectListQuery = defineQuery(`*[_type == "project"] | order(date desc) {
+    'title': title[_key == $locale][0].value, 
+    'description': description[_key == $locale][0].value, 
+    category[]->{
+      'title': title[_key == $locale][0].value, 
+      'slug': slug.current 
+    },
+    'keywords': keywords[_key == $locale][0].value, 
+    previewImage,
+    'slug': slug.current,
+    year
+  }
+`)
 
 const postFields = /* groq */ `
   _id,

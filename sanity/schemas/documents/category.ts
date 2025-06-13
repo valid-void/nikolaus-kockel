@@ -11,14 +11,25 @@ export default defineField({
       {
         name: 'title',
         title: 'Title',
-        type: 'string'
+        type: 'internationalizedArrayString'
       },
-      {
-        title: 'Slug',
-        name: 'slug',
-        type: 'slug',
-
+    //   {
+    //     title: 'Slug',
+    //     name: 'slug',
+    //     type: 'slug',
+    // },
+      defineField({
+    name: "slug",
+    title: "Slug",
+    type: "slug",
+    description: "A slug is required for URL. Generation is based on the field 'title'.",
+    options: {
+      source: 'title[0].value',
+      maxLength: 96,
+      isUnique: (value, context) => context.defaultIsUnique(value, context),
     },
+    validation: (rule) => rule.required(),
+  }),
     //   {
     //     name: 'description',
     //     title: 'Description',
@@ -27,10 +38,11 @@ export default defineField({
     ],
     preview: {
         select: {
-            title: `title`,
+            title: 'title',
         },
-        prepare(selection) {
-            return { ...selection }
+        prepare({ title }) {
+            const documentTitle = title?.[0]?.value ?? 'Untitled';
+            return { title: documentTitle };
         },
     },
   })

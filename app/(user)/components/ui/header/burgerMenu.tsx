@@ -2,17 +2,22 @@
 
 import { Bars3Icon, LanguageIcon, XMarkIcon } from "@heroicons/react/24/solid"
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import Link from "next/link";
+import { useRouter, usePathname } from 'next/navigation'
 
 interface BurgerMenuProps {
+    type: "burgerMenu" | "languageMenu";
     title: string;
     items: Array<{
         title: string | null;
-        slug: string | null;
+        slug: string;
     }> | null;
     icon: "Bars3Icon" | 'LanguageIcon';
 }
 
 export default function BurgerMenu(props: BurgerMenuProps) {
+    const router = useRouter()
+    const pathname = usePathname()
     return (
         <Menu as="nav" className="relative">
             {({ open }) => {
@@ -32,16 +37,37 @@ export default function BurgerMenu(props: BurgerMenuProps) {
 
                         <MenuItems className="fixed right-2 top-auto md:top-16 bottom-[60px] md:bottom-auto origin-top-right focus:outline-none z-50">
                             <div className="py-1 max-h-[80vh] overflow-y-auto">
-                                {props.items?.map((el) => (
-                                    <MenuItem key={`navItem-${el?.slug}`}>
-                                        <a
-                                            href={el?.slug ?? ""}
-                                            className="block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor"
-                                        >
-                                            {el?.title}
-                                        </a>
-                                    </MenuItem>
-                                ))}
+
+                                {props.items?.map((el) => {
+                                    if (!el?.slug) return null
+                                    const handleClick = () => {
+                                        if (props.icon === "LanguageIcon") {
+                                        const segments = pathname.split('/')
+                                        segments[1] = el.slug // replace locale
+                                        const newPath = segments.join('/') || '/'
+                                        router.push(newPath)
+                                        }
+                                    }
+                                    return (
+                                        <MenuItem key={`navItem-${el?.slug}`}>
+                                            { props.type === "languageMenu" ? (
+                                                <button
+                                                onClick={handleClick}
+                                                className="block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor"
+                                                >
+                                                {el.title}
+                                                </button>
+                                            ) : (
+                                                <Link href={el.slug}>
+                                                    <div className="block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor">
+                                                        {el.title}
+                                                    </div>
+                                                </Link>
+                                            )}
+                                        </MenuItem>
+                                    )
+                                })}
+
                             </div>
                         </MenuItems>
                     </>

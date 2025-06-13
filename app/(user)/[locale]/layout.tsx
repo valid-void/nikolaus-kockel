@@ -79,7 +79,9 @@ export default async function RootLayout({
 
   const title = data?.title ?? "Title undefined";
   const headerProps = {
-    menuItems: data?.menu ?? null,
+    menuItems: data?.menu?.map((menuItem: any) => (
+      { slug: menuItem.slug ?? '', title: menuItem.title ?? 'undefined' }
+    )) ?? [{ slug: '', title: 'undefined' }],
     langItems: [
       { slug: 'de', title: 'DE' },
       { slug: 'en', title: 'EN' }
@@ -112,7 +114,7 @@ export default async function RootLayout({
     }as React.CSSProperties} 
     className={`${inter.variable} ${primaryFont.variable} ${secondaryFont.variable} font-primary bg-primary text-primaryTextColor`}
     >
-      <body>
+      <body >
         <section className="min-h-screen">
           {isDraftMode && <AlertBanner />}
           <Header title={title} menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>

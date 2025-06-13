@@ -17,6 +17,7 @@ import { contentQuery, postQuery, contentSlugs, settingsQuery } from "@/sanity/l
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import PageTitle from "../../components/ui/header/pageTitle";
 
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -52,8 +53,6 @@ export async function generateMetadata(
 }
 
 export default async function PostPage({ params }: Props) {
-  console.log("content params", params)
-
   const [content] = await Promise.all([
     sanityFetch({ query: contentQuery, params })
   ]);
@@ -61,25 +60,22 @@ export default async function PostPage({ params }: Props) {
   const bgColor = content?.colors?.bgColor?.color?.hex ?? 'var(--primary-color)';
   const textColor = content?.colors?.textColor?.color?.hex ?? 'var(--primary-text)';
 
-  console.log("content of content query", content)
-
   if (!content?._id) {
     return notFound();
   }
 
   return (
-    <>
+    <div>
       <PageTitle title={content.title}/>
-    <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pt-40">
+    <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pt-40 pb-[300px]">
  
         {content.main?.length && (
            <PortableText
-             className="mx-auto max-w-2xl"
              value={content.main as PortableTextBlock[]}
-            //  components={components}
+             params={params}
            />
          )}
     </div>
-    </>
+    </div>
   );
 }

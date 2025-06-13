@@ -1,49 +1,53 @@
-/**
- * This component uses Portable Text to render a post body.
- *
- * You can learn more about Portable Text on:
- * https://www.sanity.io/docs/block-content
- * https://github.com/portabletext/react-portabletext
- * https://portabletext.org/
- *
- */
-
 import {
   PortableText,
-  type PortableTextComponents,
   type PortableTextBlock,
-} from "next-sanity";
+} from "next-sanity"
+
+import InsertGallery from "./contentBlock/insertGallery"
+import EventList from "./contentBlock/eventList"
+import ProjectList from "./contentBlock/projectList"
 
 export default function CustomPortableText({
-  className,
   value,
+  params,
 }: {
-  className?: string;
-  value: PortableTextBlock[];
+  value: PortableTextBlock[]
+  params: Promise<{ slug: string }>
 }) {
-  const components: PortableTextComponents = {
-    block: {
-      h5: ({ children }) => (
-        <h5 className="mb-2 text-sm font-semibold">{children}</h5>
-      ),
-      h6: ({ children }) => (
-        <h6 className="mb-1 text-xs font-semibold">{children}</h6>
-      ),
-    },
-    marks: {
-      link: ({ children, value }) => {
-        return (
-          <a href={value?.href} rel="noreferrer noopener">
-            {children}
-          </a>
-        );
-      },
-    },
-  };
-
+  // Split content: separate standard blocks and custom types
   return (
-    <div className={["prose", className].filter(Boolean).join(" ")}>
-      <PortableText components={components} value={value} />
+    <div>
+      {value.map((block, index) => {
+        // Check for custom object types
+        if (block._type === "eventList") return <EventList key={block._key ?? index} {...block} params={params} />
+        if (block._type === "projectList") return <ProjectList key={block._key ?? index} {...block} params={params}   />
+        if (block._type === "insertGallery") return <InsertGallery key={block._key ?? index} {...block} params={params} />
+        // Default rich text blocks (headings, paragraphs, etc.)
+        return (
+          <div key={block._key ?? index} className="max-w-2xl mx-auto">
+            <PortableText
+              value={[block]} // render one block at a time
+              components={{
+                block: {
+                  h5: ({ children }) => (
+                    <h5 className="mb-2 text-sm font-semibold">{children}</h5>
+                  ),
+                  h6: ({ children }) => (
+                    <h6 className="mb-1 text-xs font-semibold">{children}</h6>
+                  ),
+                },
+                marks: {
+                  link: ({ children, value }) => (
+                    <a href={value?.href} rel="noreferrer noopener">
+                      {children}
+                    </a>
+                  ),
+                },
+              }}
+            />
+          </div>
+        )
+      })}
     </div>
-  );
+  )
 }
