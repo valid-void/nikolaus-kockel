@@ -44,6 +44,13 @@ export default defineType({
             validation: (rule) => rule.required(),
         }),
         defineField({
+            name: "author",
+            title: "Author",
+            type: "string",
+            group: "title",
+            validation: (rule) => rule.required(),
+        }),
+        defineField({
             name: "colors",
             title: "Colors",
             type: "coloredSection",

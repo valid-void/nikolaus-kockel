@@ -231,6 +231,7 @@ export type WebsiteInfo = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  author?: string;
   colors?: ColoredSection;
   homepage?: {
     _ref: string;
@@ -673,19 +674,9 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = InsertGallery | Taxonomy | EventList | ProjectList | Hero | DocumentContent | SimpleBlock | Navigation | Category | ColorTag | Post | Author | WebsiteInfo | Event | EventDates | Project | Page | ColoredSection | InternationalizedArraySimpleBlockValue | InternationalizedArrayDocumentContentValue | InternationalizedArrayTextValue | InternationalizedArrayStringValue | InternationalizedArraySimpleBlock | InternationalizedArrayDocumentContent | InternationalizedArrayText | InternationalizedArrayString | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./app/(user)/[locale]/posts/[slug]/page.tsx
-// Variable: postSlugs
-// Query: *[_type == "post" && defined(slug.current)]{"slug": slug.current}
-export type PostSlugsResult = Array<{
-  slug: string | null;
-}>;
-
 // Source: ./sanity/lib/queries.ts
-// Variable: settingsQuery
-// Query: *[_type == "settings"][0]
-export type SettingsQueryResult = null;
 // Variable: websiteInfoQuery
-// Query: *[_type == "websiteInfo"][0] {  ...,  footer[]{    _type == "link" => {      "title": title,      "link": url    },    _type == "page" => {      "title": @->title[_key == $locale][0].value,      "link": @->slug.current    }  },  menu[]->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  homepage->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},}
+// Query: *[_type == "websiteInfo"][0] {  ...,  footer[]{    _type == "link" => {      "title": title,      "link": url    },    _type == "page" => {      "title": @->title[_key == $locale][0].value,      "link": @->slug.current    }  },  menu[]->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  homepage->{    'title': title[_key == $locale][0].value,     'slug': slug.current   },  'description': meta[_key == $locale][0].value,   'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},}
 export type WebsiteInfoQueryResult = {
   _id: string;
   _type: "websiteInfo";
@@ -693,6 +684,7 @@ export type WebsiteInfoQueryResult = {
   _updatedAt: string;
   _rev: string;
   title?: string;
+  author?: string;
   colors: {
     bgColor: {
       color: Color | null;
@@ -748,23 +740,38 @@ export type WebsiteInfoQueryResult = {
     metadataBase?: string;
     _type: "image";
   };
+  description: SimpleBlock | null;
 } | null;
 // Variable: homepageQuery
-// Query: *[_type == "websiteInfo"][0] {  'slug': homepage->slug.current,  'title': homepage->title[_key == $locale][0].value,}
+// Query: *[_type == "websiteInfo"][0] {  'slug': homepage->slug.current,  'title': homepage->title[_key == $locale][0].value,  author,}
 export type HomepageQueryResult = {
   slug: string | null;
   title: string | null;
+  author: string | null;
 } | null;
 // Variable: contentSlugs
-// Query: *[_type in ["page", "project", "event"] && defined(slug.current)]{"slug": slug.current}
+// Query: *[_type in ["page", "project", "event", "category"] && defined(slug.current)]{"slug": slug.current}
 export type ContentSlugsResult = Array<{
   slug: string | null;
 }>;
 // Variable: contentQuery
-// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    'title': title[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}    }  }
+// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}    }  }
 export type ContentQueryResult = {
   _id: string;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
   title: string | null;
+  description: string | null;
   colors: {
     bgColor: {
       color: Color | null;
@@ -1123,12 +1130,10 @@ export type PostQueryResult = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"post\" && defined(slug.current)]{\"slug\": slug.current}": PostSlugsResult;
-    "*[_type == \"settings\"][0]": SettingsQueryResult;
-    "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
-    "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n}": HomepageQueryResult;
-    "*[_type in [\"page\", \"project\", \"event\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
-    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    'title': title[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}\n    }\n  }\n": ContentQueryResult;
+    "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'description': meta[_key == $locale][0].value, \n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
+    "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n  author,\n}": HomepageQueryResult;
+    "*[_type in [\"page\", \"project\", \"event\", \"category\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
+    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}\n    }\n  }\n": ContentQueryResult;
     "*[_type == \"project\"] | order(date desc) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
     "*[_type=='event' && date.start < now() && date.end > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventOnGoingResult;
     "*[_type=='event' && date.start > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInFutureResult;

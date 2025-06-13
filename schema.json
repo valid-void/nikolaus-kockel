@@ -1430,6 +1430,13 @@
         },
         "optional": true
       },
+      "author": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "colors": {
         "type": "objectAttribute",
         "value": {

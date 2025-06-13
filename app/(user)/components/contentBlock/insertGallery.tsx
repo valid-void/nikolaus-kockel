@@ -13,7 +13,7 @@ export default async function InsertGallery(props: any) {
 return (
         <div className="w-full sm:p-10 sm:pt-40">
             <div className="columns-1 sm:columns-2 md:columns-3 gap-10 space-y-4">
-                { data.gallery.map((image: any, index: number) => {
+                { data?.gallery?.map((image: any, index: number) => {
                     return (
                         <div key={index} className="break-inside-avoid pb-20">
                             <div className="transition-shadow duration-200 group-hover:shadow-lg sm:mx-0">

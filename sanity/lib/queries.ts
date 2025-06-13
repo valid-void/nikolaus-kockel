@@ -1,7 +1,5 @@
 import { defineQuery } from "next-sanity";
 
-export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
-
 const colors = /* groq */ `'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}`;
 export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   ...,
@@ -23,21 +21,25 @@ export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
     'title': title[_key == $locale][0].value, 
     'slug': slug.current 
   },
+  'description': meta[_key == $locale][0].value, 
   ${colors},
 }`);
 
 export const homepageQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   'slug': homepage->slug.current,
   'title': homepage->title[_key == $locale][0].value,
+  author,
 }`)
 
 
 export const contentSlugs = defineQuery(
-  `*[_type in ["page", "project", "event"] && defined(slug.current)]{"slug": slug.current}`,
+  `*[_type in ["page", "project", "event", "category"] && defined(slug.current)]{"slug": slug.current}`,
 );
 export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"] && slug.current == $slug] [0] {
     _id,
+    previewImage,
     'title': title[_key == $locale][0].value, 
+    'description': description[_key == $locale][0].value, 
     ${colors},
     'main': main[_key == $locale][0].value[]{
       ...,

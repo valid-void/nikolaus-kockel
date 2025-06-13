@@ -5,13 +5,10 @@ import type { Metadata, ResolvingMetadata } from "next";
 import {
   VisualEditing,
   toPlainText,
-  type PortableTextBlock,
 } from "next-sanity";
-import { Inter } from "next/font/google";
 import { draftMode } from "next/headers";
 
 import AlertBanner from "../components/alert-banner";
-import PortableText from "../components/portable-text";
 
 import * as demo from "@/sanity/lib/demo";
 import { sanityFetch } from "@/sanity/lib/fetch";
@@ -59,11 +56,6 @@ export async function generateMetadata(
   };
 }
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export default async function RootLayout({
   children,
@@ -72,6 +64,8 @@ export default async function RootLayout({
   children: React.ReactNode,
   params: { locale: string }
 }) {
+  const { isEnabled: isDraftMode } = await draftMode();
+
   const { locale } = await params;
   const data = await sanityFetch({ query: websiteInfoQuery, params });
   const bgColor = data?.colors?.bgColor?.color?.hex ?? '#fff';
@@ -98,12 +92,7 @@ export default async function RootLayout({
     })
   });
 
-
   
-
-  // console.log("homepage data", data)
-
-  const { isEnabled: isDraftMode } = await draftMode();
 
   return (
     <html 
@@ -112,7 +101,7 @@ export default async function RootLayout({
       "--primary-color": bgColor,
       "--primary-text": textColor
     }as React.CSSProperties} 
-    className={`${inter.variable} ${primaryFont.variable} ${secondaryFont.variable} font-primary bg-primary text-primaryTextColor`}
+    className={`${primaryFont.variable} ${secondaryFont.variable} font-primary bg-primary text-primaryTextColor`}
     >
       <body >
         <section className="min-h-screen">
