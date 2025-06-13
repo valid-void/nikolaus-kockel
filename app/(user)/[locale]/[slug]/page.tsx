@@ -67,7 +67,7 @@ export default async function PostPage({ params }: Props) {
   return (
     <div>
       <PageTitle title={content.title}/>
-    <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pt-40 pb-[300px]">
+    <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pb-[300px]">
  
         {content.main?.length && (
            <PortableText

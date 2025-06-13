@@ -1,6 +1,8 @@
 import { defineQuery } from "next-sanity";
 
 export const settingsQuery = defineQuery(`*[_type == "settings"][0]`);
+
+const colors = /* groq */ `'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}`;
 export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   ...,
   footer[]{
@@ -17,7 +19,7 @@ export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
     'title': title[_key == $locale][0].value, 
     'slug': slug.current 
   },
-  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},
+  ${colors},
 }`);
 
 
@@ -27,11 +29,15 @@ export const contentSlugs = defineQuery(
 export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"] && slug.current == $slug] [0] {
     _id,
     'title': title[_key == $locale][0].value, 
-    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},
-    'main': main[_key == $locale][0].value
+    ${colors},
+    'main': main[_key == $locale][0].value[]{
+      ...,
+      ${colors}
+    }
   }
 `)
-export const projectListQuery = defineQuery(`*[_type == "project"] | order(date desc) {
+
+const previewFieldsOfMainDocuments = /* groq */ `
     'title': title[_key == $locale][0].value, 
     'description': description[_key == $locale][0].value, 
     category[]->{
@@ -42,8 +48,31 @@ export const projectListQuery = defineQuery(`*[_type == "project"] | order(date 
     previewImage,
     'slug': slug.current,
     year
-  }
-`)
+`
+export const projectListQuery = defineQuery(`*[_type == "project"] | order(date desc) {
+  ${previewFieldsOfMainDocuments},
+}`)
+export const additionEventFields = /* groq */ `
+  'start': date.start,
+  'end': date.end,
+`
+export const eventOnGoing= defineQuery(`*[_type=='event' && date.start < now() && date.end > now()] {
+  ${previewFieldsOfMainDocuments},
+  ${additionEventFields}
+}`)
+export const eventInFuture = defineQuery(`*[_type=='event' && date.start > now()] {
+  ${previewFieldsOfMainDocuments},
+  ${additionEventFields}
+}`)
+export const eventInPast = defineQuery(`*[_type=='event' && date.end < now()] {
+  ${previewFieldsOfMainDocuments},
+  ${additionEventFields}
+}`)
+export const galleryQuery = defineQuery(`*[_type in ["page", "project", "event"] && slug.current == $slug] [0] {
+  gallery
+}`)
+
+
 
 const postFields = /* groq */ `
   _id,

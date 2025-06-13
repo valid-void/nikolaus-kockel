@@ -18,6 +18,8 @@ interface BurgerMenuProps {
 export default function BurgerMenu(props: BurgerMenuProps) {
     const router = useRouter()
     const pathname = usePathname()
+
+    console.log("pathname")
     return (
         <Menu as="nav" className="relative">
             {({ open }) => {
@@ -40,6 +42,10 @@ export default function BurgerMenu(props: BurgerMenuProps) {
 
                                 {props.items?.map((el) => {
                                     if (!el?.slug) return null
+
+                                    const pathSegments = pathname.split('/')
+
+
                                     const handleClick = () => {
                                         if (props.icon === "LanguageIcon") {
                                         const segments = pathname.split('/')
@@ -53,13 +59,13 @@ export default function BurgerMenu(props: BurgerMenuProps) {
                                             { props.type === "languageMenu" ? (
                                                 <button
                                                 onClick={handleClick}
-                                                className="block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor"
+                                                className={`${el.slug == pathSegments[1] ? "underline" : ""} block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor`}
                                                 >
                                                 {el.title}
                                                 </button>
                                             ) : (
                                                 <Link href={el.slug}>
-                                                    <div className="block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor">
+                                                    <div className={`${el.slug == pathSegments[2] ? "underline" : ""} block px-4 py-2 text-xl font-bold transition-colors duration-200 rounded-full my-4 bg-primaryTextColor text-primary hover:bg-primary hover:text-primaryTextColor`}>
                                                         {el.title}
                                                     </div>
                                                 </Link>
