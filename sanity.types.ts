@@ -751,9 +751,16 @@ export type ContentSlugsResult = Array<{
   slug: string | null;
 }>;
 // Variable: contentQuery
-// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    }  }
+// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    ...,    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    },        'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,  }
 export type ContentQueryResult = {
   _id: string;
+  _type: "event";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  date?: EventDates;
+  title: string | null;
+  slug: string | null;
   previewImage: {
     asset?: {
       _ref: string;
@@ -766,16 +773,26 @@ export type ContentQueryResult = {
     crop?: SanityImageCrop;
     _type: "image";
   } | null;
-  title: string | null;
+  gallery?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  authors?: Array<string>;
+  keywords: string | null;
   description: string | null;
-  colors: {
-    bgColor: {
-      color: Color | null;
-    } | null;
-    textColor: {
-      color: Color | null;
-    } | null;
-  } | null;
   main: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -840,6 +857,242 @@ export type ContentQueryResult = {
     };
     colors: null;
   }> | null;
+  colors: {
+    bgColor: {
+      color: Color | null;
+    } | null;
+    textColor: {
+      color: Color | null;
+    } | null;
+  } | null;
+  year: null;
+} | {
+  _id: string;
+  _type: "page";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string | null;
+  slug: string | null;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  gallery?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  authors?: Array<string>;
+  keywords: string | null;
+  description: string | null;
+  main: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+    colors: null;
+  } | {
+    _key: string;
+    _type: "eventList";
+    eventCategory?: "future" | "past" | "present";
+    colors: {
+      bgColor: {
+        color: Color | null;
+      } | null;
+      textColor: {
+        color: Color | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "insertGallery";
+    insertGallery?: boolean;
+    colors: null;
+  } | {
+    _key: string;
+    _type: "projectList";
+    showAllProjects?: boolean;
+    category?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "category";
+    };
+    colors: null;
+  } | {
+    _key: string;
+    _type: "styledImage";
+    imagePosition?: "full" | "left" | "right";
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    colors: null;
+  }> | null;
+  colors: {
+    bgColor: {
+      color: Color | null;
+    } | null;
+    textColor: {
+      color: Color | null;
+    } | null;
+  } | null;
+  year: null;
+} | {
+  _id: string;
+  _type: "project";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  year: string | null;
+  title: string | null;
+  slug: string | null;
+  previewImage: {
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  } | null;
+  gallery?: Array<{
+    asset?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+    };
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+    _key: string;
+  }>;
+  category: Array<{
+    title: string | null;
+    slug: string | null;
+  }> | null;
+  authors?: Array<string>;
+  keywords: string | null;
+  description: string | null;
+  main: Array<{
+    children?: Array<{
+      marks?: Array<string>;
+      text?: string;
+      _type: "span";
+      _key: string;
+    }>;
+    style?: "blockquote" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "normal";
+    listItem?: "bullet" | "number";
+    markDefs?: Array<{
+      href?: string;
+      _type: "link";
+      _key: string;
+    }>;
+    level?: number;
+    _type: "block";
+    _key: string;
+    colors: null;
+  } | {
+    _key: string;
+    _type: "eventList";
+    eventCategory?: "future" | "past" | "present";
+    colors: {
+      bgColor: {
+        color: Color | null;
+      } | null;
+      textColor: {
+        color: Color | null;
+      } | null;
+    } | null;
+  } | {
+    _key: string;
+    _type: "insertGallery";
+    insertGallery?: boolean;
+    colors: null;
+  } | {
+    _key: string;
+    _type: "projectList";
+    showAllProjects?: boolean;
+    category?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "category";
+    };
+    colors: null;
+  } | {
+    _key: string;
+    _type: "styledImage";
+    imagePosition?: "full" | "left" | "right";
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    colors: null;
+  }> | null;
+  colors: {
+    bgColor: {
+      color: Color | null;
+    } | null;
+    textColor: {
+      color: Color | null;
+    } | null;
+  } | null;
+  date?: string;
 } | null;
 // Variable: projectListQuery
 // Query: *[_type == "project"] | order(date desc) {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,}
@@ -1125,7 +1378,7 @@ declare module "@sanity/client" {
     "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'description': meta[_key == $locale][0].value, \n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
     "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n  author,\n}": HomepageQueryResult;
     "*[_type in [\"page\", \"project\", \"event\", \"category\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
-    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    }\n  }\n": ContentQueryResult;
+    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    ...,\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value,\n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    },\n    \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  }\n": ContentQueryResult;
     "*[_type == \"project\"] | order(date desc) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
     "*[_type=='event' && date.start < now() && date.end > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventOnGoingResult;
     "*[_type=='event' && date.start > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInFutureResult;

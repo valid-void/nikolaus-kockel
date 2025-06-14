@@ -21,9 +21,10 @@ export default async function DocumentContent({ params }: Props) {
     return notFound();
   }
 
+
   return (
     <div>
-      <PageTitle title={content.title}/>
+      <PageTitle title={content.title} category={content.category} year={content.year} />
         <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen pb-[300px]">
           {content.main?.length && (
             <PortableText

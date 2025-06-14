@@ -1,6 +1,18 @@
 import { defineQuery } from "next-sanity";
 
 const colors = /* groq */ `'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}`;
+const previewFieldsOfMainDocuments = /* groq */ `
+    'title': title[_key == $locale][0].value, 
+    'description': description[_key == $locale][0].value, 
+    category[]->{
+      'title': title[_key == $locale][0].value, 
+      'slug': slug.current 
+    },
+    'keywords': keywords[_key == $locale][0].value, 
+    previewImage,
+    'slug': slug.current,
+    year
+`
 export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   ...,
   footer[]{
@@ -36,30 +48,21 @@ export const contentSlugs = defineQuery(
   `*[_type in ["page", "project", "event", "category"] && defined(slug.current)]{"slug": slug.current}`,
 );
 export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"] && slug.current == $slug] [0] {
+    ...,
     _id,
     previewImage,
     'title': title[_key == $locale][0].value, 
-    'description': description[_key == $locale][0].value, 
+    'description': description[_key == $locale][0].value,
     ${colors},
     'main': main[_key == $locale][0].value[]{
       ...,
       ${colors},
-    }
+    },
+    ${previewFieldsOfMainDocuments},
   }
 `)
 
-const previewFieldsOfMainDocuments = /* groq */ `
-    'title': title[_key == $locale][0].value, 
-    'description': description[_key == $locale][0].value, 
-    category[]->{
-      'title': title[_key == $locale][0].value, 
-      'slug': slug.current 
-    },
-    'keywords': keywords[_key == $locale][0].value, 
-    previewImage,
-    'slug': slug.current,
-    year
-`
+
 export const projectListQuery = defineQuery(`*[_type == "project"] | order(date desc) {
   ${previewFieldsOfMainDocuments},
 }`)
