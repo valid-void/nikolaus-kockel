@@ -7,7 +7,7 @@ export const documentContent = defineField({
       type: 'array',
       of: [
         { type: 'block' },
-        { type: 'hero' },
+        { type: 'styledImage' },
         { type: 'projectList' },
         { type: 'eventList' },
         { type: 'insertGallery' },

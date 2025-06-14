@@ -24,7 +24,7 @@ import project from "@/sanity/schemas/documents/project";
 import { resolveHref } from "@/sanity/lib/utils";
 
 // import modules from "./sanity/schemas/modules";
-import hero from "./sanity/schemas/components/hero";
+import styledImage from "./sanity/schemas/components/styledImage";
 import coloredSection from "./sanity/schemas/components/coloredSection";
 import eventList from "./sanity/schemas/components/eventList";
 import colorTag from "./sanity/schemas/documents/colorTag";
@@ -72,7 +72,7 @@ export default defineConfig({
       navigation,
       simpleBlock,
       documentContent,
-      hero,
+      styledImage,
       coloredSection,
       projectList,
       eventList,

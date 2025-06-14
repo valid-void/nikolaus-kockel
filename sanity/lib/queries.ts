@@ -43,7 +43,7 @@ export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"]
     ${colors},
     'main': main[_key == $locale][0].value[]{
       ...,
-      ${colors}
+      ${colors},
     }
   }
 `)

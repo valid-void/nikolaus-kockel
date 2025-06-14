@@ -6,6 +6,7 @@ import {
 import InsertGallery from "./contentBlock/insertGallery"
 import EventList from "./contentBlock/eventList"
 import ProjectList from "./contentBlock/projectList"
+import StyledImage from "./contentBlock/styledImage"
 
 export default function CustomPortableText({
   value,
@@ -22,9 +23,10 @@ export default function CustomPortableText({
         if (block._type === "eventList") return <EventList key={block._key ?? index} {...block} params={params} />
         if (block._type === "projectList") return <ProjectList key={block._key ?? index} {...block} params={params}   />
         if (block._type === "insertGallery") return <InsertGallery key={block._key ?? index} {...block} params={params} />
+        // if (block._type === "styledImage") return <StyledImage key={block._key ?? index} {...block} params={params} />
         // Default rich text blocks (headings, paragraphs, etc.)
         return (
-          <div key={block._key ?? index} className="max-w-2xl mx-auto">
+          <div key={block._key ?? index} className="max-w-5xl mx-auto">
             <PortableText
               value={[block]} // render one block at a time
               components={{
@@ -43,6 +45,10 @@ export default function CustomPortableText({
                     </a>
                   ),
                 },
+                types: {
+                  styledImage: ({ value }) => <StyledImage {...value} params={params} />,
+                },
+                
               }}
             />
           </div>

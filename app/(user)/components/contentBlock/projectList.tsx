@@ -41,9 +41,9 @@ export default async function ProjectList(props: any) {
                                             {category?.title}
                                         </span>
                                     ))}
-                                    <div className="px-4">
-                                        ⇢ <div className="underline float-right text-sm">read more</div>
-                                    </div>
+                                    {/* <div className="px-4">
+                                        <div className="underline float-right text-sm">⇢ read more</div>
+                                    </div> */}
                                 </div>
                             </Link>
                         </div>

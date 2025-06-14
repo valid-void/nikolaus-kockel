@@ -188,7 +188,7 @@
     }
   },
   {
-    "name": "hero",
+    "name": "styledImage",
     "type": "type",
     "value": {
       "type": "object",
@@ -197,49 +197,25 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "hero"
+            "value": "styledImage"
           }
         },
-        "title": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "showTitle": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
-        "alt": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
-        },
-        "showAlt": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        },
-        "heroHeight": {
+        "imagePosition": {
           "type": "objectAttribute",
           "value": {
             "type": "union",
             "of": [
               {
                 "type": "string",
-                "value": "100vh"
+                "value": "left"
               },
               {
                 "type": "string",
-                "value": "50vh"
+                "value": "full"
+              },
+              {
+                "type": "string",
+                "value": "right"
               }
             ]
           },
@@ -509,7 +485,7 @@
             },
             "rest": {
               "type": "inline",
-              "name": "hero"
+              "name": "styledImage"
             }
           },
           {

@@ -47,13 +47,9 @@ export type ProjectList = {
   };
 };
 
-export type Hero = {
-  _type: "hero";
-  title?: string;
-  showTitle?: boolean;
-  alt?: string;
-  showAlt?: boolean;
-  heroHeight?: "100vh" | "50vh";
+export type StyledImage = {
+  _type: "styledImage";
+  imagePosition?: "left" | "full" | "right";
   image?: {
     asset?: {
       _ref: string;
@@ -87,7 +83,7 @@ export type DocumentContent = Array<{
   _key: string;
 } | {
   _key: string;
-} & Hero | {
+} & StyledImage | {
   _key: string;
 } & ProjectList | {
   _key: string;
@@ -672,7 +668,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = InsertGallery | Taxonomy | EventList | ProjectList | Hero | DocumentContent | SimpleBlock | Navigation | Category | ColorTag | Post | Author | WebsiteInfo | Event | EventDates | Project | Page | ColoredSection | InternationalizedArraySimpleBlockValue | InternationalizedArrayDocumentContentValue | InternationalizedArrayTextValue | InternationalizedArrayStringValue | InternationalizedArraySimpleBlock | InternationalizedArrayDocumentContent | InternationalizedArrayText | InternationalizedArrayString | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = InsertGallery | Taxonomy | EventList | ProjectList | StyledImage | DocumentContent | SimpleBlock | Navigation | Category | ColorTag | Post | Author | WebsiteInfo | Event | EventDates | Project | Page | ColoredSection | InternationalizedArraySimpleBlockValue | InternationalizedArrayDocumentContentValue | InternationalizedArrayTextValue | InternationalizedArrayStringValue | InternationalizedArraySimpleBlock | InternationalizedArrayDocumentContent | InternationalizedArrayText | InternationalizedArrayString | Color | RgbaColor | HsvaColor | HslaColor | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/queries.ts
 // Variable: websiteInfoQuery
@@ -755,7 +751,7 @@ export type ContentSlugsResult = Array<{
   slug: string | null;
 }>;
 // Variable: contentQuery
-// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}    }  }
+// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    }  }
 export type ContentQueryResult = {
   _id: string;
   previewImage: {
@@ -812,27 +808,6 @@ export type ContentQueryResult = {
     } | null;
   } | {
     _key: string;
-    _type: "hero";
-    title?: string;
-    showTitle?: boolean;
-    alt?: string;
-    showAlt?: boolean;
-    heroHeight?: "100vh" | "50vh";
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
-    colors: null;
-  } | {
-    _key: string;
     _type: "insertGallery";
     insertGallery?: boolean;
     colors: null;
@@ -845,6 +820,23 @@ export type ContentQueryResult = {
       _type: "reference";
       _weak?: boolean;
       [internalGroqTypeReferenceTo]?: "category";
+    };
+    colors: null;
+  } | {
+    _key: string;
+    _type: "styledImage";
+    imagePosition?: "full" | "left" | "right";
+    image?: {
+      asset?: {
+        _ref: string;
+        _type: "reference";
+        _weak?: boolean;
+        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+      };
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
     };
     colors: null;
   }> | null;
@@ -1133,7 +1125,7 @@ declare module "@sanity/client" {
     "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'description': meta[_key == $locale][0].value, \n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
     "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n  author,\n}": HomepageQueryResult;
     "*[_type in [\"page\", \"project\", \"event\", \"category\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
-    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}}\n    }\n  }\n": ContentQueryResult;
+    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    }\n  }\n": ContentQueryResult;
     "*[_type == \"project\"] | order(date desc) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
     "*[_type=='event' && date.start < now() && date.end > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventOnGoingResult;
     "*[_type=='event' && date.start > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInFutureResult;
