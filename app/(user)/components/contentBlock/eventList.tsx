@@ -43,7 +43,7 @@ export default async function EventList(props: any) {
 
     const [bgColor, textColor] = getColors(props.colors);
     return (
-        <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="pt-10 sm:mb-0">
+        <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="sm:mb-0">
             {
                 eventCategory === 'present' || 
                 eventCategory === 'future' ? <Events events={data} eventCategory={eventCategory} params={params} /> :
@@ -64,7 +64,7 @@ const Events = (props: any) => {
         let [endYear, endMonth, endDay] = event.end.split('-')
         const eventDates = startDay + "." + startMonth + ". - " + endDay + "." + endMonth + "." + endYear
         return (
-            <div key={index} className="sm:p-10 pb-20 md:py-[7rem] grid md:grid-cols-2">
+            <div key={index} className=" md:py-10 grid md:grid-cols-2">
               <div className='md:order-last'>
                 {event?.previewImage == undefined ? "" :
                 <Link href={event.slug}>
@@ -75,7 +75,7 @@ const Events = (props: any) => {
               <div className="m">
                 <div className='mb-2 border-b border-b-primaryTextColor '>
                 <h3 className='py-0 px-4'>
-                      <Link href={event.slug}>
+                      <Link href={event.slug} className="no-underline">
                         {event.title}
                       </Link>
                     </h3>
@@ -132,11 +132,8 @@ const PastEvents = (props: any) => {
               <div className='w-20 text-left'>{startYear}</div>
               <div className='w-full'>
                 <Link href={event.slug}>
-                  <div>{event.venue}{event.city ? ", " + event.city : ""}</div>
+                  {/* <div>{event.venue}{event.city ? ", " + event.city : ""}</div> */}
                   <div><i>{event.title}</i></div>
-                  <div>
-                    ⇢ <div className="underline float-right text-sm">read more</div>
-                  </div>
                 </Link>
               </div>
             </div>

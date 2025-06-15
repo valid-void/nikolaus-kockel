@@ -13,6 +13,10 @@ const previewFieldsOfMainDocuments = /* groq */ `
     'slug': slug.current,
     year
 `
+export const additionEventFields = /* groq */ `
+  'start': date.start,
+  'end': date.end
+`
 export const websiteInfoQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   ...,
   footer[]{
@@ -59,6 +63,7 @@ export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"]
       ${colors},
     },
     ${previewFieldsOfMainDocuments},
+    ${additionEventFields}
   }
 `)
 
@@ -66,10 +71,7 @@ export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"]
 export const projectListQuery = defineQuery(`*[_type == "project"] | order(orderRank) {
   ${previewFieldsOfMainDocuments},
 }`)
-export const additionEventFields = /* groq */ `
-  'start': date.start,
-  'end': date.end,
-`
+
 export const eventOnGoing= defineQuery(`*[_type=='event' && date.start < now() && date.end > now()] {
   ${previewFieldsOfMainDocuments},
   ${additionEventFields}

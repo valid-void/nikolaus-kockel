@@ -36,7 +36,7 @@
       @apply text-xl pt-4;
     }
     a {
-      @apply no-underline;
+      @apply underline;
     }
     ul {
       @apply pl-6 list-disc 

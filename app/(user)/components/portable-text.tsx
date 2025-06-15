@@ -26,7 +26,7 @@ export default function CustomPortableText({
         // if (block._type === "styledImage") return <StyledImage key={block._key ?? index} {...block} params={params} />
         // Default rich text blocks (headings, paragraphs, etc.)
         return (
-          <div key={block._key ?? index} className="max-w-5xl mx-auto">
+          <div key={block._key ?? index} className="max-w-5xl mx-auto px-2">
             <PortableText
               value={[block]} // render one block at a time
               components={{

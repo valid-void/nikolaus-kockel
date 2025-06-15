@@ -23,7 +23,7 @@ export default async function ProjectList(props: any) {
     ]);
 
     return (
-        <div className="w-full pt-10 sm:p-10 sm:pt-40">
+        <div className="w-full pt-10 sm:p-10 sm:pt-20">
             {/* <p>{JSON.stringify(projects)}</p> */}
             <div className="columns-1 sm:columns-2 md:columns-3 gap-10 space-y-4">
                 { projects.map((project: any, index: number) => {
@@ -38,7 +38,7 @@ export default async function ProjectList(props: any) {
                                     <div className="text-sm">{project.year}</div>
                                     
                                     <h3 className="px-0 py-0 m-0 ">
-                                        <Link href={project?.slug ?? "/"}>
+                                        <Link href={project?.slug ?? "/"} className="no-underline">
                                             {project.title}
                                         </Link>
                                     </h3>
