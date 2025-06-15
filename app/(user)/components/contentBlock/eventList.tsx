@@ -43,7 +43,7 @@ export default async function EventList(props: any) {
 
     const [bgColor, textColor] = getColors(props.colors);
     return (
-        <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties}>
+        <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="pt-10 sm:mb-0">
             {
                 eventCategory === 'present' || 
                 eventCategory === 'future' ? <Events events={data} eventCategory={eventCategory} params={params} /> :
@@ -56,16 +56,16 @@ export default async function EventList(props: any) {
 
 
 const Events = (props: any) => {
-    const eventCategory = props.eventCategory;
+  const eventCategory = props.eventCategory;
   return (
-    <div>
+    <>
       {props.events?.map((event: any, index: number) => {
         let [startYear, startMonth, startDay] = event.start.split('-')
         let [endYear, endMonth, endDay] = event.end.split('-')
+        const eventDates = startDay + "." + startMonth + ". - " + endDay + "." + endMonth + "." + endYear
         return (
-          <div key={index}>
-            <div className="p-10 py-20 md:py-[7rem] grid md:grid-cols-2">
-              <div className='md:order-last m-4'>
+            <div key={index} className="sm:p-10 pb-20 md:py-[7rem] grid md:grid-cols-2">
+              <div className='md:order-last'>
                 {event?.previewImage == undefined ? "" :
                 <Link href={event.slug}>
                     <PreviewImage image={event.previewImage}  />
@@ -73,46 +73,47 @@ const Events = (props: any) => {
                 }
               </div>
               <div className="m">
-                <div className='mb-2 border-b'>
-                    <h3 className='p-0'>
+                <div className='mb-2 border-b border-b-primaryTextColor '>
+                <h3 className='py-0 px-4'>
                       <Link href={event.slug}>
                         {event.title}
                       </Link>
                     </h3>
-                    <div className='px-0 text-lg border-b'>
-                      {/* <p className='p-0 m-0  text-sm'>{eventCategory === "present" ? "on going show" : "up coming show"}</p> */}
-                      <div className='w-4 h-4 absolute translate-y-1 -translate-x-6'>
 
+                    <div className='flex justify-end px-4 text-lg align-middle border-b border-b-primaryTextColor'>
+                      {/* <p className='p-0 m-0  text-sm'>{eventCategory === "present" ? "on going show" : "up coming show"}</p> */}
+                      <span className='w-4 h-4 my-auto mr-2'>
                         { eventCategory === "present" ? 
                           <div className='rounded-full w-full h-full bg-green animate-pulse'></div> :
-                          // <CalendarIcon className=' text-green animate-pulse'/> :
                           <CalendarIcon />
                         }
-                      </div>
-                      {startDay}.{startMonth}. - {endDay}.{endMonth}.{endYear}
+                      </span>
+                        { eventDates}
                     </div>
+
                     
                     {/* <h6 className='p-0'>{event.venue ? "" + event.venue : ""}{event.city ? ", " + event.city : ""}</h6> */}
-                  { event.description ? 
-                    <PortableText
-                      value={event.description as PortableTextBlock[]}
-                      params={props.params}
-                    />
-                  : "" }
+                    <div className="p-4">
+
+                      { event.description ? 
+                        <PortableText
+                          value={event.description as PortableTextBlock[]}
+                          params={props.params}
+                        />
+                      : "" }
+                    </div>
                   
                 </div>
                 <Link href={event.slug}>
-                  <div className="underline float-right text-sm flex n">
+                  <div className="underline float-right text-sm flex px-4">
                     {event.title} <ArrowRightCircleIcon className="h-5 w-5 ml-4" />
                   </div>
                 </Link>
               </div>
             </div>
-            <hr className='color-primaryTextColor' />
-          </div>
         )
       })}
-    </div>
+    </>
   )
 }
 
