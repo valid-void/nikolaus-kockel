@@ -2107,7 +2107,7 @@
             },
             "rest": {
               "type": "inline",
-              "name": "internationalizedArrayTextValue"
+              "name": "internationalizedArraySimpleBlockValue"
             }
           }
         },
@@ -2491,7 +2491,7 @@
             },
             "rest": {
               "type": "inline",
-              "name": "internationalizedArrayTextValue"
+              "name": "internationalizedArraySimpleBlockValue"
             }
           }
         },
@@ -2845,7 +2845,7 @@
             },
             "rest": {
               "type": "inline",
-              "name": "internationalizedArrayTextValue"
+              "name": "internationalizedArraySimpleBlockValue"
             }
           }
         },

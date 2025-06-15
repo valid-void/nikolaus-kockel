@@ -7,7 +7,7 @@ export const sharedDocumentGroups = [
     default: true
   },
   {
-    title: 'Title',
+    title: 'Description',
     name: 'title'
   },
   {
@@ -89,8 +89,8 @@ export const sharedDocumentFields = [
   defineField({
     title: 'Description',
     name: 'description',
-    type: 'internationalizedArrayText',
-    group: 'metadata',
+    type: 'internationalizedArraySimpleBlock',
+    group: 'title',
   }),
   defineField({
     title: 'Content',

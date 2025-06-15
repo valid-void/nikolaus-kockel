@@ -40,7 +40,7 @@ export const insertGallery = defineField({
 export const simpleBlock = defineField({
       name: "simpleBlock",
       description:
-        "Used both for the <meta> description tag for SEO, and the blog subheader.",
+        "Used both for the <meta> description tag for SEO, and the list preview text.",
       title: "Description",
       type: "array",
       of: [
@@ -50,7 +50,10 @@ export const simpleBlock = defineField({
           styles: [],
           lists: [],
           marks: {
-            decorators: [],
+            decorators: [
+              { title: "Strong", value: "strong" },
+              { title: "Emphasis", value: "em" },
+            ],
             annotations: [
               defineField({
                 type: "object",

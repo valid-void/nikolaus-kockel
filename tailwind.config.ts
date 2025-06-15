@@ -2,12 +2,18 @@ import type { Config } from "tailwindcss";
 import typography from "@tailwindcss/typography";
 
 export default {
-  content: ["./app/**/*.{ts,tsx}", "./sanity/**/*.{ts,tsx}"],
+  // content: ["./app/**/*.{ts,tsx}", "./sanity/**/*.{ts,tsx}"],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+    "./sanity/**/*.{ts,tsx}"
+  ],
   theme: {
     extend: {
       colors: {
         'primary': "var(--primary-color)",
         'primaryTextColor': "var(--primary-text)",
+        'green': '#04c904',
       },
       fontFamily: {
         // "Atkinson": ["Atkinson Regular", ...defaultTheme.fontFamily.sans],

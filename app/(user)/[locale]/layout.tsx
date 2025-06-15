@@ -10,7 +10,6 @@ import { draftMode } from "next/headers";
 
 import AlertBanner from "../components/alert-banner";
 
-import * as demo from "@/sanity/lib/demo";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { websiteInfoQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
@@ -31,8 +30,8 @@ export async function generateMetadata(
     // Metadata should never contain stega
     stega: false,
   });
-  const title = settings?.title || demo.title;
-  const description = settings?.description || demo.description;
+  const title = settings?.title ?? "Title undefined";
+  const description = settings?.description;
 
   const ogImage = resolveOpenGraphImage(settings?.ogImage);
   let metadataBase: URL | undefined = undefined;
@@ -49,7 +48,7 @@ export async function generateMetadata(
       template: `%s | ${title}`,
       default: title,
     },
-    description: toPlainText(description),
+    description: description ? toPlainText(description) : "Description undefined",
     openGraph: {
       images: ogImage ? [ogImage] : [],
     },

@@ -3,6 +3,7 @@ import { sanityFetch } from "@/sanity/lib/fetch";
 import { contentQuery, contentSlugs, homepageQuery } from "@/sanity/lib/queries";
 import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import DocumentContent from "../../components/ui/documentContent";
+import { toPlainText } from "next-sanity";
 
 
 type Props = {
@@ -40,7 +41,7 @@ export async function generateMetadata(
   return {
     authors: [{ name: author }],
     title: post?.title,
-    description: post?.description,
+    description: post?.description ? toPlainText(post?.description) : "Description undefined",
     openGraph: {
       images: ogImage ? [ogImage, ...previousImages] : previousImages,
     },

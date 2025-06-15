@@ -340,7 +340,7 @@ export type Event = {
   } & InternationalizedArrayStringValue>;
   description?: Array<{
     _key: string;
-  } & InternationalizedArrayTextValue>;
+  } & InternationalizedArraySimpleBlockValue>;
   main?: Array<{
     _key: string;
   } & InternationalizedArrayDocumentContentValue>;
@@ -402,7 +402,7 @@ export type Project = {
   } & InternationalizedArrayStringValue>;
   description?: Array<{
     _key: string;
-  } & InternationalizedArrayTextValue>;
+  } & InternationalizedArraySimpleBlockValue>;
   main?: Array<{
     _key: string;
   } & InternationalizedArrayDocumentContentValue>;
@@ -458,7 +458,7 @@ export type Page = {
   } & InternationalizedArrayStringValue>;
   description?: Array<{
     _key: string;
-  } & InternationalizedArrayTextValue>;
+  } & InternationalizedArraySimpleBlockValue>;
   main?: Array<{
     _key: string;
   } & InternationalizedArrayDocumentContentValue>;
@@ -792,7 +792,7 @@ export type ContentQueryResult = {
   }> | null;
   authors?: Array<string>;
   keywords: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   main: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -905,7 +905,7 @@ export type ContentQueryResult = {
   }> | null;
   authors?: Array<string>;
   keywords: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   main: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -1019,7 +1019,7 @@ export type ContentQueryResult = {
   }> | null;
   authors?: Array<string>;
   keywords: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   main: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -1098,7 +1098,7 @@ export type ContentQueryResult = {
 // Query: *[_type == "project"] | order(date desc) {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,}
 export type ProjectListQueryResult = Array<{
   title: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   category: Array<{
     title: string | null;
     slug: string | null;
@@ -1123,7 +1123,7 @@ export type ProjectListQueryResult = Array<{
 // Query: *[_type=='event' && date.start < now() && date.end > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
 export type EventOnGoingResult = Array<{
   title: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   category: Array<{
     title: string | null;
     slug: string | null;
@@ -1150,7 +1150,7 @@ export type EventOnGoingResult = Array<{
 // Query: *[_type=='event' && date.start > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
 export type EventInFutureResult = Array<{
   title: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   category: Array<{
     title: string | null;
     slug: string | null;
@@ -1177,7 +1177,7 @@ export type EventInFutureResult = Array<{
 // Query: *[_type=='event' && date.end < now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
 export type EventInPastResult = Array<{
   title: string | null;
-  description: string | null;
+  description: SimpleBlock | null;
   category: Array<{
     title: string | null;
     slug: string | null;

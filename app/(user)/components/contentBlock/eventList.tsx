@@ -2,6 +2,12 @@ import { sanityFetch } from "@/sanity/lib/fetch";
 import { eventInFuture, eventInPast, eventOnGoing } from "@/sanity/lib/queries";
 import Link from "next/link";
 import PreviewImage from "./previewImage";
+// import { PortableText } from "next-sanity";
+import PortableText from "../../components/portable-text";
+import { PortableTextBlock } from "next-sanity";
+import { ArrowRightCircleIcon, CalendarIcon} from "@heroicons/react/24/solid"
+
+
 
 const getColors = (colors: any) => {
     return [
@@ -39,8 +45,8 @@ export default async function EventList(props: any) {
     return (
         <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties}>
             {
-                eventCategory === 'present' ? <Events events={data} eventCategory={eventCategory}/> :
-                eventCategory === 'future' ? <Events events={data} eventCategory={eventCategory}/> :
+                eventCategory === 'present' || 
+                eventCategory === 'future' ? <Events events={data} eventCategory={eventCategory} params={params} /> :
                 eventCategory === 'past' ? <PastEvents events={data} /> : null
             }
         </div>
@@ -67,19 +73,38 @@ const Events = (props: any) => {
                 }
               </div>
               <div className="m">
-                <div className='mb-2'>
-                  <Link href={event.slug}>
-                    <h3 className='p-0'>{event.title}</h3>
-                    <div className='px-0 text-lg'>
-                      {eventCategory === "present" ? <div className='w-4 h-4 rounded-full bg-green animate-pulse absolute translate-y-1 -translate-x-6'></div> : ""}
+                <div className='mb-2 border-b'>
+                    <h3 className='p-0'>
+                      <Link href={event.slug}>
+                        {event.title}
+                      </Link>
+                    </h3>
+                    <div className='px-0 text-lg border-b'>
+                      {/* <p className='p-0 m-0  text-sm'>{eventCategory === "present" ? "on going show" : "up coming show"}</p> */}
+                      <div className='w-4 h-4 absolute translate-y-1 -translate-x-6'>
+
+                        { eventCategory === "present" ? 
+                          <div className='rounded-full w-full h-full bg-green animate-pulse'></div> :
+                          // <CalendarIcon className=' text-green animate-pulse'/> :
+                          <CalendarIcon />
+                        }
+                      </div>
                       {startDay}.{startMonth}. - {endDay}.{endMonth}.{endYear}
-                      {/* <p className='p-0 m-0  text-sm'>{data.eventCategory === "present" ? "on going show" : "up coming show"}</p> */}
                     </div>
+                    
                     {/* <h6 className='p-0'>{event.venue ? "" + event.venue : ""}{event.city ? ", " + event.city : ""}</h6> */}
-                  </Link>
+                  { event.description ? 
+                    <PortableText
+                      value={event.description as PortableTextBlock[]}
+                      params={props.params}
+                    />
+                  : "" }
+                  
                 </div>
                 <Link href={event.slug}>
-                    ⇢ <div className="underline float-right text-sm">read more</div>
+                  <div className="underline float-right text-sm flex n">
+                    {event.title} <ArrowRightCircleIcon className="h-5 w-5 ml-4" />
+                  </div>
                 </Link>
               </div>
             </div>

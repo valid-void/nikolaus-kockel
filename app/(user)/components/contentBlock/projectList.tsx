@@ -29,23 +29,32 @@ export default async function ProjectList(props: any) {
                 { projects.map((project: any, index: number) => {
                     return (
                         <div key={index} className="break-inside-avoid pb-20">
-                            <Link href={project?.slug ?? "/"}>
                                 <div className="transition-shadow duration-200 group-hover:shadow-lg sm:mx-0">
+                                <Link href={project?.slug ?? "/"}>
                                     <PreviewImage image={project.previewImage}  />
+                                    </Link>
                                 </div>
                                 <div className="pt-2 px-4 bottom-0 left-0 right-0">
                                     <div className="text-sm">{project.year}</div>
-                                    <h3 className="px-0 py-0 m-0 text-lg font-semibold">{project.title}</h3>
-                                    {project.category?.map((category: any, i: number) => (
-                                        <span key={`category-${category.slug || i}`} className="tagButton mr-4">
-                                            {category?.title}
-                                        </span>
-                                    ))}
+                                    
+                                    <h3 className="px-0 py-0 m-0 text-lg font-semibold">
+                                        <Link href={project?.slug ?? "/"}>
+                                            {project.title}
+                                        </Link>
+                                    </h3>
+
+                                    <div className="text-sm" style={{overflowWrap: 'anywhere'}} >
+                                        {project.category?.map((category: any, i: number) => (
+                                            <span key={`category-${category.slug || i}`} className="text-nowrap mr-4">
+                                                {category?.title}
+                                            </span>
+                                        ))}
+                                    </div>
                                     {/* <div className="px-4">
                                         <div className="underline float-right text-sm">⇢ read more</div>
                                     </div> */}
                                 </div>
-                            </Link>
+                            
                         </div>
                     )
                 })}
