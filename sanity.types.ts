@@ -359,6 +359,7 @@ export type Project = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   year?: string;
   title?: Array<{
     _key: string;
@@ -407,7 +408,6 @@ export type Project = {
     _key: string;
   } & InternationalizedArrayDocumentContentValue>;
   colors?: ColoredSection;
-  date?: string;
 };
 
 export type Page = {
@@ -751,7 +751,7 @@ export type ContentSlugsResult = Array<{
   slug: string | null;
 }>;
 // Variable: contentQuery
-// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    ...,    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    },        'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,  }
+// Query: *[_type in ["page", "project", "event"] && slug.current == $slug] [0] {    ...,    _id,    previewImage,    'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    'main': main[_key == $locale][0].value[]{      ...,      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},    },        'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,      'start': date.start,  'end': date.end  }
 export type ContentQueryResult = {
   _id: string;
   _type: "event";
@@ -866,6 +866,8 @@ export type ContentQueryResult = {
     } | null;
   } | null;
   year: null;
+  start: string | null;
+  end: string | null;
 } | {
   _id: string;
   _type: "page";
@@ -979,12 +981,15 @@ export type ContentQueryResult = {
     } | null;
   } | null;
   year: null;
+  start: null;
+  end: null;
 } | {
   _id: string;
   _type: "project";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   year: string | null;
   title: string | null;
   slug: string | null;
@@ -1092,10 +1097,11 @@ export type ContentQueryResult = {
       color: Color | null;
     } | null;
   } | null;
-  date?: string;
+  start: null;
+  end: null;
 } | null;
 // Variable: projectListQuery
-// Query: *[_type == "project"] | order(date desc) {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,}
+// Query: *[_type == "project"] | order(orderRank) {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,}
 export type ProjectListQueryResult = Array<{
   title: string | null;
   description: SimpleBlock | null;
@@ -1120,7 +1126,7 @@ export type ProjectListQueryResult = Array<{
   year: string | null;
 }>;
 // Variable: eventOnGoing
-// Query: *[_type=='event' && date.start < now() && date.end > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
+// Query: *[_type=='event' && date.start < now() && date.end > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end}
 export type EventOnGoingResult = Array<{
   title: string | null;
   description: SimpleBlock | null;
@@ -1147,7 +1153,7 @@ export type EventOnGoingResult = Array<{
   end: string | null;
 }>;
 // Variable: eventInFuture
-// Query: *[_type=='event' && date.start > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
+// Query: *[_type=='event' && date.start > now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end}
 export type EventInFutureResult = Array<{
   title: string | null;
   description: SimpleBlock | null;
@@ -1174,7 +1180,7 @@ export type EventInFutureResult = Array<{
   end: string | null;
 }>;
 // Variable: eventInPast
-// Query: *[_type=='event' && date.end < now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end,}
+// Query: *[_type=='event' && date.end < now()] {      'title': title[_key == $locale][0].value,     'description': description[_key == $locale][0].value,     category[]->{      'title': title[_key == $locale][0].value,       'slug': slug.current     },    'keywords': keywords[_key == $locale][0].value,     previewImage,    'slug': slug.current,    year,    'start': date.start,  'end': date.end}
 export type EventInPastResult = Array<{
   title: string | null;
   description: SimpleBlock | null;
@@ -1378,11 +1384,11 @@ declare module "@sanity/client" {
     "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'description': meta[_key == $locale][0].value, \n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
     "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n  author,\n}": HomepageQueryResult;
     "*[_type in [\"page\", \"project\", \"event\", \"category\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
-    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    ...,\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value,\n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    },\n    \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  }\n": ContentQueryResult;
-    "*[_type == \"project\"] | order(date desc) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
-    "*[_type=='event' && date.start < now() && date.end > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventOnGoingResult;
-    "*[_type=='event' && date.start > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInFutureResult;
-    "*[_type=='event' && date.end < now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end,\n\n}": EventInPastResult;
+    "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    ...,\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value,\n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    },\n    \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n    \n  'start': date.start,\n  'end': date.end\n\n  }\n": ContentQueryResult;
+    "*[_type == \"project\"] | order(orderRank) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
+    "*[_type=='event' && date.start < now() && date.end > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end\n\n}": EventOnGoingResult;
+    "*[_type=='event' && date.start > now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end\n\n}": EventInFutureResult;
+    "*[_type=='event' && date.end < now()] {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n  \n  'start': date.start,\n  'end': date.end\n\n}": EventInPastResult;
     "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n  gallery\n}": GalleryQueryResult;
     "\n  *[_type == \"post\" && defined(slug.current)] | order(date desc, _updatedAt desc) [0] {\n    content,\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": HeroQueryResult;
     "\n  *[_type == \"post\" && _id != $skip && defined(slug.current)] | order(date desc, _updatedAt desc) [0...$limit] {\n    \n  _id,\n  \"status\": select(_originalId in path(\"drafts.**\") => \"draft\", \"published\"),\n   \"title\": coalesce(title[_key == \"de\"][0].value, \"Untitled\"),\n  \"slug\": slug.current,\n  excerpt,\n  coverImage,\n  \"date\": coalesce(date, _updatedAt),\n  \"author\": author->{\"name\": coalesce(name, \"Anonymous\"), picture},\n\n  }\n": MoreStoriesQueryResult;

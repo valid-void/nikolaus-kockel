@@ -2,12 +2,14 @@ import { defineField } from 'sanity'
 import { format, parseISO } from "date-fns";
 import { sharedDocumentFields, sharedDocumentGroups } from '../components/sharedMetadata';
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
+import { CubeIcon } from '@sanity/icons';
 
 
 export default defineField({
     name: 'project',
     title: 'Project',
     type: 'document',
+    icon: CubeIcon,
     orderings: [orderRankOrdering],
     groups: sharedDocumentGroups,
     fields: [

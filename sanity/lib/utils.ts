@@ -1,6 +1,7 @@
 import createImageUrlBuilder from "@sanity/image-url";
 
 import { dataset, projectId } from "@/sanity/lib/api";
+import { languages } from "@/i18n";
 
 const imageBuilder = createImageUrlBuilder({
   projectId: projectId || "",
@@ -28,10 +29,22 @@ export function resolveHref(
   slug?: string,
 ): string | undefined {
   switch (documentType) {
-    case "post":
-      return slug ? `/posts/${slug}` : undefined;
+    case "project":
+      return slug ? `${slug}` : undefined;
     default:
       console.warn("Invalid document type:", documentType);
       return undefined;
   }
+}
+
+export function resolveLocations(doc: any): { title: string, href: string }[] {
+  const locations = languages.map((language: any, index) => {
+    const title = doc?.localeTitle?.[index]?.value ?? "Title undefined";
+    const href = "/" + language.slug + "/" + doc?.slug;
+    return ({
+      title: language.slug + " - " + title,
+      href: href,
+    })
+  })
+  return locations
 }

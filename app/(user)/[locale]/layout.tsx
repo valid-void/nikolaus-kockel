@@ -16,6 +16,7 @@ import { resolveOpenGraphImage } from "@/sanity/lib/utils";
 import Header from "../components/ui/header/header";
 import { primaryFont, secondaryFont } from '../fonts/fonts'
 import Footer from "../components/ui/footer/footer";
+import { languages } from "@/i18n";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -75,10 +76,7 @@ export default async function RootLayout({
     menuItems: data?.menu?.map((menuItem: any) => (
       { slug: menuItem.slug ?? '', title: menuItem.title ?? 'undefined' }
     )) ?? [{ slug: '', title: 'undefined' }],
-    langItems: [
-      { slug: 'de', title: 'DE' },
-      { slug: 'en', title: 'EN' }
-    ],
+    langItems: languages,
   }
   const footerProps: Array<{
       title: string;

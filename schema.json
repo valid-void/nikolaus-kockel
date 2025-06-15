@@ -2210,6 +2210,13 @@
           "type": "string"
         }
       },
+      "orderRank": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "year": {
         "type": "objectAttribute",
         "value": {
@@ -2524,13 +2531,6 @@
         "value": {
           "type": "inline",
           "name": "coloredSection"
-        },
-        "optional": true
-      },
-      "date": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
         },
         "optional": true
       }

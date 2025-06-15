@@ -1,12 +1,12 @@
 import { defineField } from 'sanity'
-import {TagIcon} from '@sanity/icons'
+import {HashIcon} from '@sanity/icons'
 
 
 export default defineField({
     name: 'category',
     title: 'Category',
     type: 'document',
-    icon: TagIcon,
+    icon: HashIcon,
     fields: [
       {
         name: 'title',
