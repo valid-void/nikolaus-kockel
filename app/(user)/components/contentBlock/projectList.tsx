@@ -45,7 +45,7 @@ export default async function ProjectList(props: any) {
 
                                     <div className="text-sm" style={{overflowWrap: 'anywhere'}} >
                                         {project.category?.map((category: any, i: number) => (
-                                            <span key={`category-${category.slug || i}`} className="text-nowrap mr-4">
+                                            <span key={`category-${category?.slug || i}`} className="text-nowrap mr-4">
                                                 {category?.title}
                                             </span>
                                         ))}

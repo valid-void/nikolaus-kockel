@@ -63,7 +63,7 @@ export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"]
 `)
 
 
-export const projectListQuery = defineQuery(`*[_type == "project"] | order(date desc) {
+export const projectListQuery = defineQuery(`*[_type == "project"] | order(orderRank) {
   ${previewFieldsOfMainDocuments},
 }`)
 export const additionEventFields = /* groq */ `

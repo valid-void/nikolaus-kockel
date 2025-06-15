@@ -1,23 +1,17 @@
 import { defineField } from 'sanity'
 import { format, parseISO } from "date-fns";
 import { sharedDocumentFields, sharedDocumentGroups } from '../components/sharedMetadata';
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
 
 export default defineField({
     name: 'project',
     title: 'Project',
     type: 'document',
-    orderings: [
-        {
-            title: 'Release Date, New',
-            name: 'releaseDateDesc',
-            by: [
-                { field: 'date', direction: 'desc' }
-            ]
-        }
-    ],
+    orderings: [orderRankOrdering],
     groups: sharedDocumentGroups,
     fields: [
+        orderRankField({ type: "project",  newItemPosition: "before" }),
         defineField({
             title: 'Year',
             name: 'year',
@@ -25,24 +19,17 @@ export default defineField({
             group: 'metadata',
         }),
         ...sharedDocumentFields,
-        defineField({
-            name: "date",
-            title: "Date",
-            type: "datetime",
-            group: 'media',
-            description: "This field defines the order of the projects.",
-            initialValue: () => new Date().toISOString(),
-        }),
     ],
     preview: {
         select: {
             title: 'title',
             date: "date",
             media: "previewImage",
+            year: 'year',
         },
-        prepare({ title, media, date }) {
+        prepare({ title, media, date, year }) {
             const startDate = date?.start ? `${format(parseISO(date.start), "dd.MM.yyyy")}` : "Date undefined";
-            const subtitles = [startDate].filter(Boolean);
+            const subtitles = [year];
             const documentTitle = title?.[0]?.value ?? 'Untitled';
             return { title: documentTitle, media, subtitle: subtitles.join(" ") };
         },

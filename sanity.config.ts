@@ -6,6 +6,8 @@ import { visionTool } from "@sanity/vision";
 import { PluginOptions, defineConfig } from "sanity";
 import { internationalizedArray } from 'sanity-plugin-internationalized-array';
 import { colorInput } from '@sanity/color-input'
+import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
+
 import { unsplashImageAsset } from "sanity-plugin-asset-source-unsplash";
 import {
   presentationTool,
@@ -131,10 +133,10 @@ export default defineConfig({
     }),
     structureTool({
       // structure:  pageStructure([settings]) 
-      structure: (S) => S.list()
+      structure: (S, context) => S.list()
         .title('Content')
         .items([
-          Projects(S),
+          Projects(S, context),
           Events(S),
           // Posts(S),
           Pages(S),
@@ -187,13 +189,19 @@ const Events = (S: StructureBuilder) =>
       S.documentTypeList('event')
     )
 
-const Projects = (S: StructureBuilder) =>
-  S.listItem()
-    .title('Projects')
-    .icon(DocumentIcon as ComponentType)
-    .child(
-      S.documentTypeList('project')
-    )
+const Projects = (S: StructureBuilder, context: any) =>
+orderableDocumentListDeskItem({
+  type: 'project', 
+  title: 'Projects',
+  icon: DocumentIcon,
+  S, context
+})
+  // S.listItem()
+  //   .title('Projects')
+  //   .icon(DocumentIcon as ComponentType)
+  //   .child(
+  //     S.documentTypeList('project')
+  //   )
 
 const Posts = (S: StructureBuilder) =>
   S.listItem()
