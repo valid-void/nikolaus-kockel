@@ -47,6 +47,11 @@ export const homepageQuery = defineQuery(`*[_type == "websiteInfo"][0] {
   author,
 }`)
 
+export const getTitleBySlugs = defineQuery(
+  `*[_type in ["page", "project", "event", "category"] && slug.current == $slug] [] {
+    'title': title[_key == $locale][0].value, 
+  }`,
+);
 
 export const contentSlugs = defineQuery(
   `*[_type in ["page", "project", "event", "category"] && defined(slug.current)]{"slug": slug.current}`,

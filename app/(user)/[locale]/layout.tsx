@@ -105,7 +105,7 @@ export default async function RootLayout({
           {isDraftMode && <AlertBanner />}
           <Header locale={locale} title={title} menuItems={headerProps.menuItems} langItems={headerProps.langItems}/>
           <main>{children}</main>
-          <Footer links={footerProps} />
+          <Footer locale={locale} links={footerProps} />
         </section>
         {isDraftMode && <VisualEditing />}
         <SpeedInsights />
