@@ -5,6 +5,7 @@
     "dev": "next --turbo",
     "prebuild": "npm run typegen",
     "build": "next build",
+    "export": "next export",
     "start": "next start",
     "lint": "next lint",
     "presetup": "echo 'about to setup env variables, follow the guide here: https://github.com/vercel/next.js/tree/canary/examples/cms-sanity#using-the-sanity-cli'",
@@ -45,5 +46,6 @@
   "devDependencies": {
     "eslint": "^9.13.0",
     "eslint-config-next": "^15.0.0"
-  }
+  },
+  "engines": { "node": "24" }
 }
