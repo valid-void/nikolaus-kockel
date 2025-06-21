@@ -2,14 +2,32 @@ import sharp from 'sharp'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { buildConfig } from 'payload'
-import { Projects } from './payloadcms/collection/projects'
+import { Project } from './payloadcms/collection/project'
 import { en } from '@payloadcms/translations/languages/en'
 import { de } from '@payloadcms/translations/languages/de'
+import { Media } from './payloadcms/collection/media'
+import { Category } from './payloadcms/collection/category'
+// import { Color } from './payloadcms/collection/color'
+
+export const DEFAULT_LOCALE = "de";
 
 export default buildConfig({
+    localization: {
+        defaultLocale: 'de',
+        locales: [
+            {
+                label: 'Deutsch',
+                code: 'de',
+            },
+            {
+                label: 'English',
+                code: 'en',
+            }
+        ],
+    },
     i18n: {
-        fallbackLanguage: 'en', // default
-        supportedLanguages: { en, de },
+        fallbackLanguage: 'de',
+        supportedLanguages: { de, en },
     },
 
     // If you'd like to use Rich Text, pass your editor here
@@ -17,7 +35,10 @@ export default buildConfig({
 
     // Define and configure your collections in this array
     collections: [
-        Projects
+        Project,
+        Category,
+        Media,
+        // Color
     ],
 
     // Your Payload secret - should be a complex and secure string, unguessable
