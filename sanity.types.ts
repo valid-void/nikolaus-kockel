@@ -745,6 +745,11 @@ export type HomepageQueryResult = {
   title: string | null;
   author: string | null;
 } | null;
+// Variable: getTitleBySlugs
+// Query: *[_type in ["page", "project", "event", "category"] && slug.current == $slug] [] {    'title': title[_key == $locale][0].value,   }
+export type GetTitleBySlugsResult = Array<{
+  title: string | null;
+}>;
 // Variable: contentSlugs
 // Query: *[_type in ["page", "project", "event", "category"] && defined(slug.current)]{"slug": slug.current}
 export type ContentSlugsResult = Array<{
@@ -1383,6 +1388,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"websiteInfo\"][0] {\n  ...,\n  footer[]{\n    _type == \"link\" => {\n      \"title\": title,\n      \"link\": url\n    },\n    _type == \"page\" => {\n      \"title\": @->title[_key == $locale][0].value,\n      \"link\": @->slug.current\n    }\n  },\n  menu[]->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  homepage->{\n    'title': title[_key == $locale][0].value, \n    'slug': slug.current \n  },\n  'description': meta[_key == $locale][0].value, \n  'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n}": WebsiteInfoQueryResult;
     "*[_type == \"websiteInfo\"][0] {\n  'slug': homepage->slug.current,\n  'title': homepage->title[_key == $locale][0].value,\n  author,\n}": HomepageQueryResult;
+    "*[_type in [\"page\", \"project\", \"event\", \"category\"] && slug.current == $slug] [] {\n    'title': title[_key == $locale][0].value, \n  }": GetTitleBySlugsResult;
     "*[_type in [\"page\", \"project\", \"event\", \"category\"] && defined(slug.current)]{\"slug\": slug.current}": ContentSlugsResult;
     "*[_type in [\"page\", \"project\", \"event\"] && slug.current == $slug] [0] {\n    ...,\n    _id,\n    previewImage,\n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value,\n    'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    'main': main[_key == $locale][0].value[]{\n      ...,\n      'colors': colors{ 'bgColor': bgColor->{color}, 'textColor': textColor->{color}},\n    },\n    \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n    \n  'start': date.start,\n  'end': date.end\n\n  }\n": ContentQueryResult;
     "*[_type == \"project\"] | order(orderRank) {\n  \n    'title': title[_key == $locale][0].value, \n    'description': description[_key == $locale][0].value, \n    category[]->{\n      'title': title[_key == $locale][0].value, \n      'slug': slug.current \n    },\n    'keywords': keywords[_key == $locale][0].value, \n    previewImage,\n    'slug': slug.current,\n    year\n,\n}": ProjectListQueryResult;
