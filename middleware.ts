@@ -12,6 +12,7 @@ export function middleware(req: NextRequest) {
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/studio') ||
+    pathname.startsWith('/admin') ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next()
@@ -32,5 +33,5 @@ export function middleware(req: NextRequest) {
 
 export const config = {
   // matcher: ['/((?!api|_next|studio|favicon.ico|.*\\..*).*)'],
-  matcher: ["/((?!api|studio|_next/static|_next/image|assets|favicon|favicon.ico|sw.js|manifest.json|logo.svg).*)",],
+  matcher: ["/((?!api|studio|admin|_next/static|_next/image|assets|favicon|favicon.ico|sw.js|manifest.json|logo.svg).*)",],
 }
