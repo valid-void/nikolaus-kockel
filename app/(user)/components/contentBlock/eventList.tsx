@@ -17,7 +17,6 @@ const getColors = (colors: any) => {
 }
 
 export default async function EventList(props: any) {
-    // console.log("project list props", props)
     const params = props.params;
 
     const eventCategory = props.eventCategory;
@@ -36,9 +35,6 @@ export default async function EventList(props: any) {
     const [data] = eventQuery ? await Promise.all([
         sanityFetch({ query: eventQuery, params })
     ]) : [];
-
-    console.log("EVENT DATA", data)
-
 
 
     const [bgColor, textColor] = getColors(props.colors);

@@ -26,6 +26,6 @@ export const setDefaultTitle: FieldHook = async ({ data, req }) => {
 }
 
 export const isDefaultLocale: Condition = ({siblingData }) => {
-    console.log("locale", siblingData )
+    // console.log("locale", siblingData )
     return true //locale === DEFAULT_LOCALE;
 }

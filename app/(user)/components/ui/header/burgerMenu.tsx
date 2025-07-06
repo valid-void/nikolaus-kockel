@@ -20,7 +20,6 @@ export default function BurgerMenu(props: BurgerMenuProps) {
     const router = useRouter()
     const pathname = usePathname()
 
-    console.log("pathname")
     return (
         <Menu as="nav" className="relative">
             {({ open }) => {
@@ -49,7 +48,6 @@ export default function BurgerMenu(props: BurgerMenuProps) {
                                     const isCurrentPage = pathSegments[2] === el?.slug;
                                     const isHomepage = pathSegments[2] === undefined && el?.slug === props.homepageSlug;
 
-                                    console.log("pathSegments[2]", pathSegments[2])
                                     const handleClick = () => {
                                         if (props.icon === "LanguageIcon") {
                                         const segments = pathname.split('/')
