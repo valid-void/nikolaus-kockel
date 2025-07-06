@@ -1,0 +1,9 @@
+.rich-text__editor, .rich-text-lexical__wrap {
+ border: 1px solid var(--theme-elevation-150);
+}
+.rich-text__editor {
+    padding: 10px;
+}
+.rich-text__toolbar {
+    margin-bottom: 0;
+}

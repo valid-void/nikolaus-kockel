@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { generateSlugFromTitleByDefaultLocale, setDefaultTitle } from '../utils/generateSlug'
 import { lexicalEditor, UploadFeature } from '@payloadcms/richtext-lexical'
 import { slateEditor } from '@payloadcms/richtext-slate'
+// import { colorPickerField } from '@innovixx/payload-color-picker-field'
 
 export const Project: CollectionConfig = {
   slug: 'project',
@@ -13,11 +14,20 @@ export const Project: CollectionConfig = {
   },
   fields: [
     {
-      type: 'tabs',
-      tabs: [
+      type: "row",
+      fields: [
         {
-          label: "About",
+          type: "group",
           fields: [
+            // colorPickerField({
+            //     name: 'textColor',
+            //     label: 'Primary Color',
+            //     required: true,
+            //     admin: {
+            //         position: 'sidebar',
+            //         description: 'Choose a color for this page',
+            //     },
+            // }),
             {
               name: 'title',
               type: 'text',
@@ -51,19 +61,33 @@ export const Project: CollectionConfig = {
               }
             },
             {
-              name: 'year',
-              type: 'number'
-            },
-            {
-              name: 'category',
-              type: 'relationship',
-              relationTo: 'category',
-              hasMany: true
+              type: "row",
+              fields: [
+                {
+                  name: 'category',
+                  type: 'relationship',
+                  relationTo: 'category',
+                  hasMany: true,
+                  admin: {
+                    width: '50%',
+                  }
+                },
+                {
+                  name: 'year',
+                  type: 'number',
+                  admin: {
+                    width: '50%',
+                  }
+                },
+              ]
             },
             {
               name: 'description',
               type: 'richText',
               localized: true,
+              admin: {
+                width: '50%',
+              },
               editor: slateEditor({
                 admin: {
                   leaves: [
@@ -79,21 +103,21 @@ export const Project: CollectionConfig = {
           ]
         },
         {
-          label: "Media",
+          type: "group",
           fields: [
             {
               name: 'preview',
               type: 'upload',
               relationTo: 'media',
               required: false,
-              label: 'Preview Image',
+              label: 'Preview Image'
             },
             {
               name: 'cover',
               type: 'upload',
               relationTo: 'media',
               required: false,
-              label: 'Cover Image',
+              label: 'Cover Image'
             },
             {
               name: 'gallery',
@@ -103,44 +127,40 @@ export const Project: CollectionConfig = {
               label: 'Image Gallery',
               hasMany: true
             }
-          ]
+          ],
+          admin: {
+            width: '50%',
+          }
         },
-        {
-          label: "Content",
-          fields: [
-            {
-              name: 'caption',
-              type: 'richText',
-              localized: true,
-              editor: lexicalEditor({
-                features: ({ defaultFeatures }) => [
-                  ...defaultFeatures,
-                  UploadFeature({
-                    collections: {
-                      media: {
-                        fields: [
-                          {
-                            name: 'alignment',
-                            type: 'select',
-                            options: [
-                              { label: 'Float left', value: 'left' },
-                              { label: 'Full', value: 'full' },
-                              { label: 'Float right', value: 'right' },
-                            ],
-                            defaultValue: 'full'
-                          }
-
-                        ]
-                      }
-                    }
-                  })
-                ]
-              }),
-            }
-          ]
-        }
       ]
+    },
+    {
+      name: 'content',
+      type: 'richText',
+      localized: true,
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [
+          ...defaultFeatures,
+          UploadFeature({
+            collections: {
+              media: {
+                fields: [
+                  {
+                    name: 'alignment',
+                    type: 'select',
+                    options: [
+                      { label: 'Float left', value: 'left' },
+                      { label: 'Full', value: 'full' },
+                      { label: 'Float right', value: 'right' },
+                    ],
+                    defaultValue: 'full'
+                  }
+                ]
+              }
+            }
+          })
+        ]
+      }),
     }
-
   ],
 }
