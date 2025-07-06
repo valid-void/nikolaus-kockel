@@ -51,6 +51,12 @@ export const sharedDocumentFields = [
     group: 'media',
   }),
   defineField({
+    title: 'Cover image',
+    name: 'coverImage',
+    type: 'image',
+    group: 'media',
+  }),
+  defineField({
     name: 'gallery',
     title: 'Gallery Images',
     type: 'array',

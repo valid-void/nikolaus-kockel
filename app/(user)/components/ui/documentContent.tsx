@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import PortableText from "../../components/portable-text";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { contentQuery } from "@/sanity/lib/queries";
-import PreviewImage from "../contentBlock/previewImage";
+import PreviewImage, { CovorImage } from "../contentBlock/previewImage";
 import { CalendarIcon } from "@heroicons/react/24/solid";
 
 type Props = {
@@ -58,13 +58,7 @@ const Content = async (props: any) => {
 
 const ProjectHeroSection = async (props: any) => {
   const project = props;
-  return (
-    <div className='p-10 pb-0'>
-      {project?.previewImage == undefined ? "" :
-        <PreviewImage image={project.previewImage} />
-      }
-  </div>
-  )
+  return project?.coverImage == undefined ? null : <CovorImage image={project.coverImage} />
 };
 
 const EventHeroSection = (props: any) => {

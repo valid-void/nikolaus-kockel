@@ -10,6 +10,7 @@ const previewFieldsOfMainDocuments = /* groq */ `
     },
     'keywords': keywords[_key == $locale][0].value, 
     previewImage,
+    coverImage,
     'slug': slug.current,
     year
 `
@@ -59,7 +60,6 @@ export const contentSlugs = defineQuery(
 export const contentQuery = defineQuery(`*[_type in ["page", "project", "event"] && slug.current == $slug] [0] {
     ...,
     _id,
-    previewImage,
     'title': title[_key == $locale][0].value, 
     'description': description[_key == $locale][0].value,
     ${colors},

@@ -21,7 +21,7 @@ export default async function Footer(props: FooterProps) {
     sanityFetch({ query: getTitleBySlugs, params: { locale: props.locale, slug: "privacy"} }),
   ]);
   return (
-    <footer className="w-full z-40 bg-primaryTextColor text-primary mt-10">
+    <footer className="w-full z-40 bg-primaryTextColor text-primary">
         <ul className="list-none py-10 max-w-5xl m-auto">
           {props?.links?.map((button, index) => (
             <FooterLink href={button.link} title={button.title} key={index}/>
