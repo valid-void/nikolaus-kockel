@@ -11,7 +11,7 @@ export default async function StyledImage(props: any) {
       : "w-full";
 
 return (
-        <div className={`mx-auto py-4 ${layoutClass}`}>
+        <div className={`max-w-5xl mx-auto py-4 ${layoutClass}`}>
             {/* {JSON.stringify(props)} */}
             <PreviewImage image={image}  />
         </div>

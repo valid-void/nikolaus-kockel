@@ -64,7 +64,7 @@ const Events = (props: any) => {
         let [endYear, endMonth, endDay] = event.end.split('-')
         const eventDates = startDay + "." + startMonth + ". - " + endDay + "." + endMonth + "." + endYear
         return (
-            <div key={index} className=" md:py-10 grid md:grid-cols-2">
+            <div key={index} className=" md:p-10 grid md:grid-cols-2">
               <div className='md:order-last'>
                 {event?.previewImage == undefined ? "" :
                 <Link href={event.slug}>

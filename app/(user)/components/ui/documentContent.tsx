@@ -30,7 +30,7 @@ export default async function DocumentContent({ params }: Props) {
     <div>
       <PageTitle title={content.title} category={content.category} year={content.year} />
 
-      <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen ">
+      <div style={{ backgroundColor: bgColor, color: textColor } as React.CSSProperties} className="min-h-screen">
 
         { docType === "event" ? <EventHeroSection {...content} params={params} /> : null }
         { docType === "project" ? <ProjectHeroSection {...content} params={params} /> : null }
@@ -45,7 +45,7 @@ export default async function DocumentContent({ params }: Props) {
 
 const Content = async (props: any) => {
   return (
-    <div className="pt-10 sm:pt-20">
+    <div className="py-10">
       {props?.main?.length && (
         <PortableText
           value={props?.main as PortableTextBlock[]}
@@ -67,7 +67,7 @@ const EventHeroSection = (props: any) => {
   let [endYear, endMonth, endDay] = event.end.split('-')
   const eventDates = startDay + "." + startMonth + ". - " + endDay + "." + endMonth + "." + endYear
   return (
-    <div className="sm:p-10 pb-2 md:pt-[7rem] grid md:grid-cols-2 border-b border-b-primaryTextColor">
+    <div className="sm:p-10 pb-2 md:pt-[7rem] grid md:grid-cols-2 ">
 
       <div className=''>
         {event?.previewImage == undefined ? "" :

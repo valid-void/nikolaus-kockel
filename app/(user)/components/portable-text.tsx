@@ -23,7 +23,7 @@ export default function CustomPortableText({
         if (block._type === "eventList") return <EventList key={block._key ?? index} {...block} params={params} />
         if (block._type === "projectList") return <ProjectList key={block._key ?? index} {...block} params={params}   />
         if (block._type === "insertGallery") return <InsertGallery key={block._key ?? index} {...block} params={params} />
-        // if (block._type === "styledImage") return <StyledImage key={block._key ?? index} {...block} params={params} />
+        if (block._type === "styledImage") return <StyledImage key={block._key ?? index} {...block} params={params} />
         // Default rich text blocks (headings, paragraphs, etc.)
         return (
           <div key={block._key ?? index} className="max-w-5xl mx-auto px-2">
@@ -45,9 +45,9 @@ export default function CustomPortableText({
                     </a>
                   ),
                 },
-                types: {
-                  styledImage: ({ value }) => <StyledImage {...value} params={params} />,
-                },
+                // types: {
+                //   styledImage: ({ value }) => <StyledImage {...value} params={params} />,
+                // },
                 
               }}
             />

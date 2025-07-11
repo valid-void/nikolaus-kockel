@@ -23,9 +23,8 @@ export default function PreviewImage(props: any) {
 export function CovorImage(props: any) {
   const { image: source, priority } = props;
   return source?.asset?._ref ? (
-    <div className=''>
       <Image
-        className="sm:rounded-xl sm:h-screen w-full object-cover"
+        className="sm:rounded-xl sm:h-screen w-full object-cover sm:p-[100px] pt-10"
         width={2000}
         height={1000}
         alt={source?.alt || ""}
@@ -33,7 +32,6 @@ export function CovorImage(props: any) {
         sizes="100vw"
         priority={priority}
       />
-    </div>
   ) : (
     <div className="bg-slate-50" style={{ paddingTop: "50%" }} />
   );
